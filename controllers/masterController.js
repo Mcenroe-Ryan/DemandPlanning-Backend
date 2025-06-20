@@ -22,7 +22,8 @@ const {
   getCategoriesByPlant,
   getSkusByCategory,
   getForecastData,
-  getForecastDataForTest
+  getForecastDataForTest,
+  updateConsensusForecast
 } = require("../service/masterService");
 
 // // City
@@ -266,7 +267,6 @@ const getPlantsByCities = async (city_ids) => {
   const result = await query('SELECT * FROM dim_plant WHERE city_id = ANY($1)', [city_ids]);
   return result.rows;
 };
-
 
 module.exports = {
   // getCities,

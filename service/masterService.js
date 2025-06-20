@@ -85,8 +85,10 @@ const getSkusByCategory = async (category_id) => {
 
 const getForecastData = async (filters) => {
   const model_name = 'XGBoost';
-  const start_date = '2025-04-05';
-  const end_date = '2025-10-01';
+  
+  // Extract start_date and end_date from filters, with fallback to default values
+  const start_date = filters.startDate || '2025-04-05';
+  const end_date = filters.endDate || '2025-09-01';
 
   const whereClauses = ['model_name = $1', 'item_date BETWEEN $2 AND $3'];
   const values = [model_name, start_date, end_date];
@@ -136,18 +138,31 @@ const getForecastData = async (filters) => {
     ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
   `;
 
-  console.log("======== DEBUG ========");
-  console.log("Filters received:", filters);
-  console.log("Query generated:", queryText);
-  console.log("Values passed:", values);
-  console.log("=======================");
-
+  // console.log("======== FORECAST DATA DEBUG ========");
+  // console.log("📅 Date Range Applied:");
+  // console.log(`   Start Date: ${start_date}`);
+  // console.log(`   End Date: ${end_date}`);
+  // console.log("🔍 All Filters received:", filters);
+  // console.log("📝 Generated SQL Query:");
+  // console.log(queryText);
+  // console.log("🎯 Query Parameters:");
+  // console.log("   $1 (model_name):", values[0]);
+  // console.log("   $2 (start_date):", values[1]);
+  // console.log("   $3 (end_date):", values[2]);
+  values.slice(3).forEach((val, i) => {
+    console.log(`   $${i + 4}:`, val);
+  });
   const result = await query(queryText, values);
-  console.table(result.rows);
+  // console.log("📊 Query Results:");
+  // console.log(`   Rows returned: ${result.rows.length}`);
+  // if (result.rows.length > 0) {
+  //   console.log("   Data preview:");
+  //   console.table(result.rows);
+  // } else {
+  //   console.log("   ⚠️  No data found for the selected date range and filters");
+  // }
   return result.rows;
 };
-
-// module.exports = { getForecastData };
 
 const getForecastDataForTest = async () => {
   const result = await query(`
@@ -234,79 +249,169 @@ const getSkusByCategories = async (categoryIds) => {
   );
   return result.rows;
 };
+// const updateConsensusForecast = async (payload) => {
+//   // Print payload for debugging
+//   console.log("Received updateConsensusForecast payload:");
+//   console.table(payload);
+//   // Validate required parameters
+//   const requiredParams = [
+//     'country_name', 'state_name', 'city_name', 'plant_name',
+//     'category_name', 'sku_code', 'channel_name', 'model_name',
+//     'start_date', 'end_date', 'consensus_forecast'
+//   ];
 
-// const getForecastDataForTest = async ({
-//   country_name,
-//   state_name,
-//   city_name,
-//   plant_name,
-//   category_name,
-//   sku_code,
-//   channel_name
-// }) => {
-//   console.log("Filter values received in backend:");
-//   console.table({
-//     country_name,
-//     state_name,
-//     city_name,
-//     plant_name,
-//     category_name,
-//     sku_code,
-//     channel_name
-//   });
+//   for (const param of requiredParams) {
+//     console.log("Update query params:");
+//     console.table(params);
+//     if (!(param in payload)) {
+//       throw new Error(`Missing required parameter: ${param}`);
+//     }
+//   }
 
-//   const queryText = `
-//     SELECT 
-//       SUM(actual_units) AS actual,
-//       SUM(baseline_forecast) AS baseline_forecast,
-//       SUM(ml_forecast) AS ml_forecast,
-//       SUM(sales_units) AS sales_units,
-//       SUM(promotion_marketing) AS promotion_marketing,
-//       SUM(consensus_forecast) AS consensus_forecast,
-//       SUM(revenue_forecast_lakhs) AS revenue_forecast_lakhs,
-//       SUM(inventory_level_pct) AS inventory_level_pct,
-//       SUM(stock_out_days) AS stock_out_days,
-//       SUM(on_hand_units) AS on_hand_units,
-//       month_name
-//     FROM public.demand_forecast
-//     WHERE 
-//       country_name = $1 AND
-//       state_name = $2 AND
-//       city_name = $3 AND
-//       plant_name = $4 AND
-//       category_name = $5 AND
-//       sku_code = $6 AND
-//       channel_name = $7 AND
-//       model_name = 'XGBoost' AND 
-//       item_date BETWEEN '2025-05-01' AND '2025-09-01'
-//     GROUP BY month_name
-//     ORDER BY month_name;
+//   // Construct parameterized SQL query
+//   const sql = `
+//     UPDATE public.demand_forecast
+//     SET consensus_forecast = $1
+//     WHERE country_name = $2
+//       AND state_name = $3
+//       AND city_name = $4
+//       AND plant_name = $5
+//       AND category_name = $6
+//       AND sku_code = $7
+//       AND channel_name = $8
+//       AND model_name = $9
+//       AND item_date BETWEEN $10 AND $11
 //   `;
 
-//   const values = [
-//     country_name,
-//     state_name,
-//     city_name,
-//     plant_name,
-//     category_name,
-//     sku_code,
-//     channel_name
+//   // Parameter values in correct order
+//   const params = [
+//     payload.consensus_forecast,
+//     payload.country_name,
+//     payload.state_name,
+//     payload.city_name,
+//     payload.plant_name,
+//     payload.category_name,
+//     payload.sku_code,
+//     payload.channel_name,
+//     payload.model_name,
+//     payload.start_date,
+//     payload.end_date
 //   ];
 
 //   try {
-//     const result = await query(queryText, values);
-//     console.log("Query executed. Row count:", result.rowCount);
-//     console.table(result.rows);
-//     return result.rows;
+//     const result = await query(sql, params);
+//     return {
+//       success: true,
+//       message: `Updated ${result.rowCount} record(s)`,
+//       updatedCount: result.rowCount
+//     };
 //   } catch (error) {
-//     console.error("Query failed:", error.message);
-//     throw error;
+//     console.error('Database update error:', error);
+//     throw new Error('Failed to update consensus forecast');
 //   }
 // };
+const updateConsensusForecast = async (payload) => {
+  console.log("Received updateConsensusForecast payload:");
+  console.table(payload);
+
+  const requiredParams = [
+    'country_name', 'state_name', 'city_name', 'plant_name',
+    'category_name', 'sku_code', 'channel_name',
+    'start_date', 'end_date', 'consensus_forecast'
+  ];
+  for (const param of requiredParams) {
+    if (!(param in payload)) {
+      const errorMsg = `Missing required parameter: ${param}`;
+      console.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+  }
+
+  const model_name = 'XGBoost';
+  const arr = v => Array.isArray(v) ? v : [v];
+  const consensusValue = Number(payload.consensus_forecast);
+
+  if (isNaN(consensusValue)) {
+    throw new Error("consensus_forecast must be a number");
+  }
+
+  const params = [
+    consensusValue,
+    arr(payload.country_name),
+    arr(payload.state_name),
+    arr(payload.city_name),
+    arr(payload.plant_name),
+    arr(payload.category_name),
+    arr(payload.sku_code),
+    arr(payload.channel_name),
+    model_name,
+    payload.start_date,
+    payload.end_date
+  ];
+
+  console.log("Executing update query with parameters:");
+  // console.table(params);
+
+  // Debug SELECT
+  const debugSql = `
+    SELECT COUNT(*) FROM public.demand_forecast
+    WHERE country_name = ANY($1)
+      AND state_name = ANY($2)
+      AND city_name = ANY($3)
+      AND plant_name = ANY($4)
+      AND category_name = ANY($5)
+      AND sku_code = ANY($6)
+      AND channel_name = ANY($7)
+      AND model_name = $8
+      AND item_date BETWEEN $9 AND $10
+  `;
+
+  const debugParams = params.slice(1); // remove consensus_forecast
+  const debugResult = await query(debugSql, debugParams);
+  console.log("Matching rows for update:", debugResult.rows[0]?.count);
+
+  if (debugResult.rows[0]?.count === "0") {
+    return {
+      success: false,
+      message: "No matching rows found for update",
+      updatedCount: 0,
+    };
+  }
+
+  const sql = `
+    UPDATE public.demand_forecast
+    SET consensus_forecast = $1
+    WHERE country_name = ANY($2)
+      AND state_name = ANY($3)
+      AND city_name = ANY($4)
+      AND plant_name = ANY($5)
+      AND category_name = ANY($6)
+      AND sku_code = ANY($7)
+      AND channel_name = ANY($8)
+      AND model_name = $9
+      AND item_date BETWEEN $10 AND $11
+  `;
+
+  try {
+    const result = await query(sql, params);
+    console.log(`Database update affected ${result.rowCount} row(s).`);
+    return {
+      success: true,
+      message: `Updated ${result.rowCount} record(s)`,
+      updatedCount: result.rowCount
+    };
+  } catch (error) {
+    console.error('Database update error:', error);
+    throw new Error('Failed to update consensus forecast');
+  }
+};
+
+
 
 
 module.exports = {
   // ...other exports
+  updateConsensusForecast,
   getCitiesByStates,
   getPlantsByCities,
   getCategoriesByPlants,
@@ -336,5 +441,6 @@ module.exports = {
   getCitiesByStates,
   getPlantsByCities,
   getCategoriesByPlants,
-  getSkusByCategories
+  getSkusByCategories,
+  updateConsensusForecast
 };

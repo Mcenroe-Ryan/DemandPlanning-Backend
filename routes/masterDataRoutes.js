@@ -16,9 +16,8 @@ const {
   fetchSkus,
   fetchForecastData,
   getForecastDataController,
-  getPlantsByCities
-
-
+  getPlantsByCities,
+updateConsensus
 } = require("../controllers/masterController");
 const service = require('../service/masterService');
 
@@ -118,6 +117,36 @@ router.post('/forecast', async (req, res) => {
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+router.put('/forecast/consensus', async (req, res) => {
+  try {
+    const payload = req.body;
+    
+    // Call service function
+    const result = await service.updateConsensusForecast(req.body);
+    
+    // Successful response
+    res.status(200).json({
+      success: true,
+      message: result.message,
+      updatedCount: result.updatedCount
+    });
+    
+  } catch (error) {
+    // Handle different error types
+    if (error.message.startsWith('Missing required parameter')) {
+      res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    } else {
+      console.error('Database update error:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Internal server error'
+      });
+    }
   }
 });
 module.exports = router;
