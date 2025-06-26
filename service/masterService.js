@@ -164,6 +164,101 @@ const getForecastData = async (filters) => {
   return result.rows;
 };
 
+
+// const getForecastData = async (filters) => {
+//   const model_name = 'XGBoost';
+  
+//   // Extract start_date and end_date from filters, with fallback to default values
+//   const start_date = filters.startDate || '2025-04-05';
+//   const end_date = filters.endDate || '2025-09-01';
+
+//   const whereClauses = ['model_name = $1', 'item_date BETWEEN $2 AND $3'];
+//   const values = [model_name, start_date, end_date];
+//   let idx = 4;
+
+//   // Map incoming filter keys to DB column names
+//   const filterMap = {
+//     country: 'country_name',
+//     state: 'state_name',
+//     cities: 'city_name',
+//     plants: 'plant_name',
+//     categories: 'category_name',
+//     skus: 'sku_code',
+//     channels: 'channel_name',
+//   };
+
+//   for (const [inputKey, columnName] of Object.entries(filterMap)) {
+//     const val = filters[inputKey];
+//     if (val) {
+//       if (Array.isArray(val) && val.length > 0) {
+//         whereClauses.push(`${columnName} = ANY($${idx})`);
+//         values.push(val);
+//       } else if (typeof val === 'string' || typeof val === 'number') {
+//         whereClauses.push(`${columnName} = $${idx}`);
+//         values.push(val);
+//       }
+//       idx++;
+//     }
+//   }
+
+//   const baseWhereClause = whereClauses.join(' AND ');
+
+  // const queryText = `
+  //   WITH latest_actual_month AS (
+  //     SELECT MAX(TO_DATE(month_name, 'FMMonth YYYY')) as max_actual_date
+  //     FROM public.demand_forecast 
+  //     WHERE actual_units > 0 
+  //       AND ${baseWhereClause}
+  //   )
+  //   SELECT 
+  //     sum(actual_units) as actual_units,
+  //     sum(baseline_forecast) as baseline_forecast,
+  //     sum(ml_forecast) as ml_forecast,
+  //     sum(sales_units) as sales_units, 
+  //     sum(promotion_marketing) as promotion_marketing,
+  //     COALESCE(sum(CASE 
+  //       WHEN TO_DATE(month_name, 'FMMonth YYYY') <= (
+  //         SELECT max_actual_date + INTERVAL '1 month' 
+  //         FROM latest_actual_month
+  //       )
+  //       THEN COALESCE(consensus_forecast, 0)
+  //       ELSE 0 
+  //     END), 0) as consensus_forecast,
+  //     sum(revenue_forecast_lakhs) as revenue_forecast_lakhs,
+  //     sum(inventory_level_pct) as inventory_level_pct,
+  //     sum(stock_out_days) as stock_out_days,
+  //     sum(on_hand_units) as on_hand_units,
+  //     month_name,
+  //     -- Debug fields to see what's happening
+  //     (SELECT max_actual_date FROM latest_actual_month) as debug_max_actual_date,
+  //     (SELECT max_actual_date + INTERVAL '1 month' FROM latest_actual_month) as debug_limit_date,
+  //     TO_DATE(month_name, 'FMMonth YYYY') as debug_current_month,
+  //     (TO_DATE(month_name, 'FMMonth YYYY') <= (
+  //       SELECT max_actual_date + INTERVAL '1 month' 
+  //       FROM latest_actual_month
+  //     )) as debug_should_include
+  //   FROM public.demand_forecast
+  //   WHERE ${baseWhereClause}
+  //   GROUP BY month_name
+  //   ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
+  // `;
+
+//   values.slice(3).forEach((val, i) => {
+//     console.log(`   $${i + 4}:`, val);
+//   });
+//   const result = await query(queryText, values);
+  
+//   // Log debug information
+//   console.log("=== CONSENSUS FORECAST DEBUG ===");
+//   result.rows.forEach(row => {
+//     console.log(`Month: ${row.month_name}, Consensus: ${row.consensus_forecast}, Should Include: ${row.debug_should_include}`);
+//   });
+  
+//   return result.rows;
+// };
+
+
+
 const getForecastDataForTest = async () => {
   const result = await query(`
     SELECT 
@@ -310,20 +405,219 @@ const getSkusByCategories = async (categoryIds) => {
 //     throw new Error('Failed to update consensus forecast');
 //   }
 // };
-const updateConsensusForecast = async (payload) => {
-  console.log("Received updateConsensusForecast payload:");
-  console.table(payload);
+// const updateConsensusForecast = async (payload) => {
+//   // console.log("Received updateConsensusForecast payload:");
+//   // console.table(payload);
 
+//   const requiredParams = [
+//     'country_name', 'state_name', 'city_name', 'plant_name',
+//     'category_name', 'sku_code', 'channel_name',
+//     'start_date', 'end_date', 'consensus_forecast'
+//   ];
+//   for (const param of requiredParams) {
+//     if (!(param in payload)) {
+//       const errorMsg = `Missing required parameter: ${param}`;
+//       console.error(errorMsg);
+//       throw new Error(errorMsg);
+//     }
+//   }
+
+//   const model_name = 'XGBoost';
+//   const arr = v => Array.isArray(v) ? v : [v];
+//   const consensusValue = Number(payload.consensus_forecast);
+
+//   if (isNaN(consensusValue)) {
+//     throw new Error("consensus_forecast must be a number");
+//   }
+
+//   const params = [
+//     consensusValue,
+//     arr(payload.country_name),
+//     arr(payload.state_name),
+//     arr(payload.city_name),
+//     arr(payload.plant_name),
+//     arr(payload.category_name),
+//     arr(payload.sku_code),
+//     arr(payload.channel_name),
+//     model_name,
+//     payload.start_date,
+//     payload.end_date
+//   ];
+
+//   console.log("Executing update query with parameters:");
+//   // console.table(params);
+
+//   // Debug SELECT
+//   const debugSql = `
+//     SELECT COUNT(*) FROM public.demand_forecast
+//     WHERE country_name = ANY($1)
+//       AND state_name = ANY($2)
+//       AND city_name = ANY($3)
+//       AND plant_name = ANY($4)
+//       AND category_name = ANY($5)
+//       AND sku_code = ANY($6)
+//       AND channel_name = ANY($7)
+//       AND model_name = $8
+//       AND item_date BETWEEN $9 AND $10
+//   `;
+
+//   const debugParams = params.slice(1); // remove consensus_forecast
+//   const debugResult = await query(debugSql, debugParams);
+//   console.log("Matching rows for update:", debugResult.rows[0]?.count);
+
+//   if (debugResult.rows[0]?.count === "0") {
+//     return {
+//       success: false,
+//       message: "No matching rows found for update",
+//       updatedCount: 0,
+//     };
+//   }
+
+//   const sql = `
+//     UPDATE public.demand_forecast
+//     SET consensus_forecast = $1
+//     WHERE country_name = ANY($2)
+//       AND state_name = ANY($3)
+//       AND city_name = ANY($4)
+//       AND plant_name = ANY($5)
+//       AND category_name = ANY($6)
+//       AND sku_code = ANY($7)
+//       AND channel_name = ANY($8)
+//       AND model_name = $9
+//       AND item_date BETWEEN $10 AND $11
+//   `;
+
+//   try {
+//     const result = await query(sql, params);
+//     console.log(`Database update affected ${result.rowCount} row(s).`);
+//     return {
+//       success: true,
+//       message: `Updated ${result.rowCount} record(s)`,
+//       updatedCount: result.rowCount
+//     };
+//   } catch (error) {
+//     console.error('Database update error:', error);
+//     throw new Error('Failed to update consensus forecast');
+//   }
+// };
+
+
+// const updateConsensusForecast = async (payload) => {
+//   const requiredParams = [
+//     'country_name', 'state_name', 'city_name', 'plant_name',
+//     'category_name', 'sku_code', 'channel_name',
+//     'start_date', 'end_date', 'consensus_forecast'
+//   ];
+
+//   for (const param of requiredParams) {
+//     if (!(param in payload)) {
+//       throw new Error(`Missing required parameter: ${param}`);
+//     }
+//   }
+
+//   const model_name = 'XGBoost';
+//   const arr = v => Array.isArray(v) ? v : [v];
+//   const consensusValue = Number(payload.consensus_forecast);
+
+//   if (isNaN(consensusValue)) {
+//     throw new Error("consensus_forecast must be a number");
+//   }
+
+//   const params = [
+//     consensusValue,
+//     arr(payload.country_name),
+//     arr(payload.state_name),
+//     arr(payload.city_name),
+//     arr(payload.plant_name),
+//     arr(payload.category_name),
+//     arr(payload.sku_code),
+//     arr(payload.channel_name),
+//     model_name,
+//     payload.start_date,
+//     payload.end_date
+//   ];
+
+//   console.log("Executing update query with parameters:");
+//   console.table(params);
+
+//   // Check how many rows will be updated (only after latest actual month)
+//   const debugSql = `
+//     WITH latest_actual_month AS (
+//       SELECT MAX(item_date) as max_date
+//       FROM public.demand_forecast
+//       WHERE actual_units > 0
+//     )
+//     SELECT COUNT(*) FROM public.demand_forecast, latest_actual_month
+//     WHERE country_name = ANY($1)
+//       AND state_name = ANY($2)
+//       AND city_name = ANY($3)
+//       AND plant_name = ANY($4)
+//       AND category_name = ANY($5)
+//       AND sku_code = ANY($6)
+//       AND channel_name = ANY($7)
+//       AND model_name = $8
+//       AND item_date BETWEEN $9 AND $10
+//       AND item_date > latest_actual_month.max_date
+//   `;
+
+//   const debugParams = params.slice(1); // exclude consensusValue
+//   const debugResult = await query(debugSql, debugParams);
+//   console.log("Matching rows for update:", debugResult.rows[0]?.count);
+
+//   if (debugResult.rows[0]?.count === "0") {
+//     return {
+//       success: false,
+//       message: "No matching rows found after the latest actual month",
+//       updatedCount: 0,
+//     };
+//   }
+
+//   // Perform update
+//   const sql = `
+//     WITH latest_actual_month AS (
+//       SELECT MAX(item_date) as max_date
+//       FROM public.demand_forecast
+//       WHERE actual_units > 0
+//     )
+//     UPDATE public.demand_forecast
+//     SET consensus_forecast = $1
+//     FROM latest_actual_month
+//     WHERE country_name = ANY($2)
+//       AND state_name = ANY($3)
+//       AND city_name = ANY($4)
+//       AND plant_name = ANY($5)
+//       AND category_name = ANY($6)
+//       AND sku_code = ANY($7)
+//       AND channel_name = ANY($8)
+//       AND model_name = $9
+//       AND item_date BETWEEN $10 AND $11
+//       AND item_date > latest_actual_month.max_date
+//   `;
+
+//   try {
+//     const result = await query(sql, params);
+//     console.log(`Database update affected ${result.rowCount} row(s).`);
+//     return {
+//       success: true,
+//       message: `Updated ${result.rowCount} record(s) after the latest actual month.`,
+//       updatedCount: result.rowCount
+//     };
+//   } catch (error) {
+//     console.error('Database update error:', error);
+//     throw new Error('Failed to update consensus forecast');
+//   }
+// };
+
+const updateConsensusForecast = async (payload) => {
   const requiredParams = [
     'country_name', 'state_name', 'city_name', 'plant_name',
     'category_name', 'sku_code', 'channel_name',
     'start_date', 'end_date', 'consensus_forecast'
   ];
+
   for (const param of requiredParams) {
     if (!(param in payload)) {
-      const errorMsg = `Missing required parameter: ${param}`;
-      console.error(errorMsg);
-      throw new Error(errorMsg);
+      throw new Error(`Missing required parameter: ${param}`);
     }
   }
 
@@ -350,11 +644,16 @@ const updateConsensusForecast = async (payload) => {
   ];
 
   console.log("Executing update query with parameters:");
-  // console.table(params);
+  console.table(params);
 
-  // Debug SELECT
+  // Step 1: Debug - count only months strictly after the latest actual month
   const debugSql = `
-    SELECT COUNT(*) FROM public.demand_forecast
+    WITH latest_actual_month AS (
+      SELECT DATE_TRUNC('month', MAX(item_date)) AS max_month
+      FROM public.demand_forecast
+      WHERE actual_units > 0
+    )
+    SELECT COUNT(*) FROM public.demand_forecast, latest_actual_month
     WHERE country_name = ANY($1)
       AND state_name = ANY($2)
       AND city_name = ANY($3)
@@ -364,23 +663,31 @@ const updateConsensusForecast = async (payload) => {
       AND channel_name = ANY($7)
       AND model_name = $8
       AND item_date BETWEEN $9 AND $10
+      AND DATE_TRUNC('month', item_date) > latest_actual_month.max_month
   `;
 
-  const debugParams = params.slice(1); // remove consensus_forecast
+  const debugParams = params.slice(1); 
   const debugResult = await query(debugSql, debugParams);
   console.log("Matching rows for update:", debugResult.rows[0]?.count);
 
   if (debugResult.rows[0]?.count === "0") {
     return {
       success: false,
-      message: "No matching rows found for update",
+      message: "No matching rows found after the latest actual month",
       updatedCount: 0,
     };
   }
 
+  // Step 2: Actual update
   const sql = `
+    WITH latest_actual_month AS (
+      SELECT DATE_TRUNC('month', MAX(item_date)) AS max_month
+      FROM public.demand_forecast
+      WHERE actual_units > 0
+    )
     UPDATE public.demand_forecast
     SET consensus_forecast = $1
+    FROM latest_actual_month
     WHERE country_name = ANY($2)
       AND state_name = ANY($3)
       AND city_name = ANY($4)
@@ -390,6 +697,7 @@ const updateConsensusForecast = async (payload) => {
       AND channel_name = ANY($8)
       AND model_name = $9
       AND item_date BETWEEN $10 AND $11
+      AND DATE_TRUNC('month', item_date) > latest_actual_month.max_month
   `;
 
   try {
@@ -397,7 +705,7 @@ const updateConsensusForecast = async (payload) => {
     console.log(`Database update affected ${result.rowCount} row(s).`);
     return {
       success: true,
-      message: `Updated ${result.rowCount} record(s)`,
+      message: `Updated ${result.rowCount} record(s) after the latest actual month.`,
       updatedCount: result.rowCount
     };
   } catch (error) {
@@ -405,7 +713,6 @@ const updateConsensusForecast = async (payload) => {
     throw new Error('Failed to update consensus forecast');
   }
 };
-
 
 
 
