@@ -23,161 +23,74 @@ const {
   getSkusByCategory,
   getForecastData,
   getForecastDataForTest,
-  updateConsensusForecast
+  updateConsensusForecast,
 } = require("../service/masterService");
-
-// // City
-// const getCities = async (req, res) => {
-//   try {
-//     const data = await getAllCities();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("City fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch cities" });
-//   }
-// };
-
-// // Plant
-// const getPlants = async (req, res) => {
-//   try {
-//     const data = await getAllPlants();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("Plant fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch plants" });
-//   }
-// };
-
-// // Category
-// const getCategories = async (req, res) => {
-//   try {
-//     const data = await getAllCategories();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("Category fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch categories" });
-//   }
-// };
-
-// // SKU
-// const getSkus = async (req, res) => {
-//   try {
-//     const data = await getAllSkus();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("SKU fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch SKUs" });
-//   }
-// };
-
-// // Channel
-// const getChannels = async (req, res) => {
-//   try {
-//     const data = await getAllChannels();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("Channel fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch channels" });
-//   }
-// };
-
-// // Demand Forecast
-// const getDemandForecasts = async (req, res) => {
-//   try {
-//     const data = await getAllDemandForecasts();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("Forecast fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch demand forecasts" });
-//   }
-// };
-
-// // Models
-// const getModels = async (req, res) => {
-//   try {
-//     const data = await getAllModels();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("Models fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch Models" });
-//   }
-// };
-// // Models
-// const getForecastData = async (req, res) => {
-//   try {
-//     const data = await getAllForecastData();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("Forecast fetch error:", err);
-//     res.status(500).json({ message: "Failed to fetch Forecast" });
-//   }
-// };
 
 const getAllStateData = async (req, res) => {
   try {
-    const result = await getAllState(); 
+    const result = await getAllState();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 const getAllCitiesData = async (req, res) => {
   try {
-    const result = await getAllCities(); 
+    const result = await getAllCities();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 const getAllCategoriesData = async (req, res) => {
   try {
-    const result = await getAllCategories(); 
+    const result = await getAllCategories();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 const getAllSkusData = async (req, res) => {
   try {
-    const result = await getAllSkus(); 
+    const result = await getAllSkus();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 const getAllChannelsData = async (req, res) => {
   try {
-    const result = await getAllChannels(); 
+    const result = await getAllChannels();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 const getAllPlantsData = async (req, res) => {
   try {
-    const result = await getAllPlants(); 
+    const result = await getAllPlants();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 const getAllCountriesData = async (req, res) => {
   try {
-    const result = await getAllCountries(); 
+    const result = await getAllCountries();
     res.json(result);
   } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -189,7 +102,7 @@ const fetchStates = async (req, res) => {
     res.json(states);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching states');
+    res.status(500).send("Error fetching states");
   }
 };
 // GET /cities?state_id=1
@@ -200,7 +113,7 @@ const fetchCities = async (req, res) => {
     res.json(cities);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching cities');
+    res.status(500).send("Error fetching cities");
   }
 };
 
@@ -212,7 +125,7 @@ const fetchPlants = async (req, res) => {
     res.json(plants);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching plants');
+    res.status(500).send("Error fetching plants");
   }
 };
 
@@ -224,7 +137,7 @@ const fetchCategories = async (req, res) => {
     res.json(categories);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching categories');
+    res.status(500).send("Error fetching categories");
   }
 };
 
@@ -236,7 +149,7 @@ const fetchSkus = async (req, res) => {
     res.json(skus);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching SKUs');
+    res.status(500).send("Error fetching SKUs");
   }
 };
 
@@ -248,7 +161,7 @@ const fetchForecastData = async (req, res) => {
     res.json(data);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error fetching forecast data');
+    res.status(500).send("Error fetching forecast data");
   }
 };
 const getForecastDataController = async (req, res) => {
@@ -261,22 +174,16 @@ const getForecastDataController = async (req, res) => {
   }
 };
 
-
 // In your backend controller (masterController.js)
 const getPlantsByCities = async (city_ids) => {
-  const result = await query('SELECT * FROM dim_plant WHERE city_id = ANY($1)', [city_ids]);
+  const result = await query(
+    "SELECT * FROM dim_plant WHERE city_id = ANY($1)",
+    [city_ids]
+  );
   return result.rows;
 };
 
 module.exports = {
-  // getCities,
-  // getPlants,
-  // getCategories,
-  // getSkus,
-  // getChannels,
-  // getDemandForecasts,
-  // getModels,
-  // getForecastData,
   getAllCountriesData,
   getAllStateData,
   getAllCitiesData,
@@ -284,7 +191,12 @@ module.exports = {
   getAllChannelsData,
   getAllSkusData,
   getAllPlantsData,
-  fetchStates, fetchCities, fetchPlants, fetchCategories,fetchSkus, fetchForecastData,getForecastDataController,
-  ////
-  getPlantsByCities
+  fetchStates,
+  fetchCities,
+  fetchPlants,
+  fetchCategories,
+  fetchSkus,
+  fetchForecastData,
+  getForecastDataController,
+  getPlantsByCities,
 };

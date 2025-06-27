@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const {
-  // demand
   getAllStateData,
   getAllCategoriesData,
   getAllChannelsData,
@@ -15,39 +14,28 @@ const {
   fetchCategories,
   fetchSkus,
   fetchForecastData,
-  getForecastDataController,
-  getPlantsByCities,
-updateConsensus
+  getForecastDataController
 } = require("../controllers/masterController");
 const service = require('../service/masterService');
 
-
-
-// Route definitions
-// router.get("/cities", getCities);
-// router.get("/plants", getPlants);
-// router.get("/categories", getCategories);
-// router.get("/skus", getSkus);
-// router.get("/channels", getChannels);
-// router.get("/demand-forecasts", getDemandForecasts);
-// router.get("/models", getModels);
-// router.get("/forecast-data", getAllForecastData);
-router.get("/getAllState",getAllStateData);
-router.get("/getAllCategories",getAllCategoriesData);
-router.get("/getAllChannels",getAllChannelsData);
-router.get("/getAllCities",getAllCitiesData);
-router.get("/getAllSkus",getAllSkusData);
-router.get("/getAllPlants",getAllPlantsData);
-
-router.get("/getAllCountries",getAllCountriesData);
+// Basic GET routes
+router.get("/getAllState", getAllStateData);
+router.get("/getAllCategories", getAllCategoriesData);
+router.get("/getAllChannels", getAllChannelsData);
+router.get("/getAllCities", getAllCitiesData);
+router.get("/getAllSkus", getAllSkusData);
+router.get("/getAllPlants", getAllPlantsData);
+router.get("/getAllCountries", getAllCountriesData);
 router.get('/states', fetchStates);
 router.get('/plants', fetchPlants);
 router.get('/categories', fetchCategories);
 router.get('/skus', fetchSkus);
 router.get('/forecast', fetchForecastData);
+
+// POST routes
 router.post('/forecast-test', getForecastDataController);
 
-
+// Relationship-based routes
 router.post('/states-by-country', async (req, res) => {
   try {
     const { countryIds } = req.body;
@@ -90,7 +78,6 @@ router.post('/plants-by-cities', async (req, res) => {
   }
 });
 
-// POST /api/categories-by-plants
 router.post('/categories-by-plants', async (req, res) => {
   try {
     const { plantIds } = req.body;
@@ -101,7 +88,6 @@ router.post('/categories-by-plants', async (req, res) => {
   }
 });
 
-// POST /api/skus-by-categories
 router.post('/skus-by-categories', async (req, res) => {
   try {
     const { categoryIds } = req.body;
@@ -111,6 +97,7 @@ router.post('/skus-by-categories', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 router.post('/forecast', async (req, res) => {
   try {
     const data = await service.getForecastData(req.body);
@@ -119,22 +106,17 @@ router.post('/forecast', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Consensus forecast update
 router.put('/forecast/consensus', async (req, res) => {
   try {
-    const payload = req.body;
-    
-    // Call service function
     const result = await service.updateConsensusForecast(req.body);
-    
-    // Successful response
     res.status(200).json({
       success: true,
       message: result.message,
       updatedCount: result.updatedCount
     });
-    
   } catch (error) {
-    // Handle different error types
     if (error.message.startsWith('Missing required parameter')) {
       res.status(400).json({
         success: false,
@@ -149,6 +131,5 @@ router.put('/forecast/consensus', async (req, res) => {
     }
   }
 });
+
 module.exports = router;
-
-
