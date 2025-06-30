@@ -204,21 +204,131 @@ const getSkusByCategories = async (categoryIds) => {
   return result.rows;
 };
 
+// const updateConsensusForecast = async (payload) => {
+//   console.log("Received payload:", payload);
+
+//   const requiredParams = [
+//     "country_name",
+//     "state_name",
+//     "city_name",
+//     "plant_name",
+//     "category_name",
+//     "sku_code",
+//     "channel_name",
+//     // "start_date",
+//     // "end_date",
+//     "consensus_forecast",
+//     "latest_actual_month",
+//   ];
+
+//   // 1. Validate required fields
+//   for (const param of requiredParams) {
+//     if (!(param in payload)) {
+//       console.error(`Missing required parameter: ${param}`);
+//       throw new Error(`Missing required parameter: ${param}`);
+//     }
+//   }
+
+//   // 2. Parse and validate latest_actual_month
+//   let latestActualMonth;
+
+//   if (dayjs(payload.latest_actual_month, "MMMM-YYYY", true).isValid()) {
+//     latestActualMonth = dayjs(payload.latest_actual_month, "MMMM-YYYY")
+//       .endOf("month")
+//       .format("YYYY-MM-DD");
+//   } else if (dayjs(payload.latest_actual_month, "YYYY-MM-DD", true).isValid()) {
+//     latestActualMonth = dayjs(payload.latest_actual_month, "YYYY-MM-DD")
+//       .endOf("month")
+//       .format("YYYY-MM-DD");
+//   } else {
+//     console.error(
+//       "Invalid latest_actual_month format. Received:",
+//       payload.latest_actual_month
+//     );
+//     throw new Error(
+//       "latest_actual_month must be in 'MMMM-YYYY' or 'YYYY-MM-DD' format"
+//     );
+//   }
+
+//   console.log(
+//     `Converted latest_actual_month ('${payload.latest_actual_month}') to end of month: ${latestActualMonth}`
+//   );
+
+//   // 3. Validate and parse consensus_forecast
+//   const consensusValue = Number(payload.consensus_forecast);
+//   if (isNaN(consensusValue)) {
+//     console.error(
+//       "Invalid consensus_forecast value. Received:",
+//       payload.consensus_forecast
+//     );
+//     throw new Error("consensus_forecast must be a valid number");
+//   }
+
+//   // 4. Prepare SQL parameters
+//   const model_name = "XGBoost";
+//   const arr = (v) => (Array.isArray(v) ? v : [v]);
+
+//   const params = [
+//     consensusValue,
+//     arr(payload.country_name),
+//     arr(payload.state_name),
+//     arr(payload.city_name),
+//     arr(payload.plant_name),
+//     arr(payload.category_name),
+//     arr(payload.sku_code),
+//     arr(payload.channel_name),
+//     model_name,
+//     // payload.start_date,
+//     // payload.end_date,
+//     latestActualMonth,
+//   ];
+
+//   console.log("Prepared SQL parameters:", params);
+
+//   // 5. SQL query
+//   const sql = `
+//     UPDATE public.demand_forecast
+//     SET consensus_forecast = $1
+//     WHERE country_name = ANY($2)
+//       AND state_name = ANY($3)
+//       AND city_name = ANY($4)
+//       AND plant_name = ANY($5)
+//       AND category_name = ANY($6)
+//       AND sku_code = ANY($7)
+//       AND channel_name = ANY($8)
+//       AND model_name = $9
+//       AND DATE(item_date) = $10
+//   `;
+
+//   console.log("SQL Query to execute:\n", sql);
+
+//   // 6. Execute query
+//   try {
+//     const result = await query(sql, params);
+//     console.log(`Updated ${result.rowCount} row(s) for consensus_forecast.`);
+//     return {
+//       success: true,
+//       message: `Updated ${result.rowCount} record(s) for consensus_forecast.`,
+//       updatedCount: result.rowCount,
+//     };
+//   } catch (error) {
+//     console.error("Error updating consensus_forecast:", error);
+//     throw new Error("Failed to update consensus_forecast");
+//   }
+// };
 const updateConsensusForecast = async (payload) => {
-  // console.log("Received payload:", payload);
+  console.log("Received payload:", payload);
 
   const requiredParams = [
     "country_name",
-    "state_name",
+    "state_name", 
     "city_name",
     "plant_name",
     "category_name",
     "sku_code",
     "channel_name",
-    "start_date",
-    "end_date",
     "consensus_forecast",
-    "latest_actual_month",
+    "target_month", // Changed from latest_actual_month
   ];
 
   // 1. Validate required fields
@@ -229,29 +339,26 @@ const updateConsensusForecast = async (payload) => {
     }
   }
 
-  // 2. Parse and validate latest_actual_month
-  let latestActualMonth;
+  // 2. Parse and validate target_month, then convert to month-end
+  let targetMonth;
 
-  if (dayjs(payload.latest_actual_month, "MMMM-YYYY", true).isValid()) {
-    latestActualMonth = dayjs(payload.latest_actual_month, "MMMM-YYYY")
-      .endOf("month")
-      .format("YYYY-MM-DD");
-  } else if (dayjs(payload.latest_actual_month, "YYYY-MM-DD", true).isValid()) {
-    latestActualMonth = dayjs(payload.latest_actual_month, "YYYY-MM-DD")
-      .endOf("month")
+  if (dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
+    // FIXED: Convert beginning of month to end of month since backend stores month-end dates
+    targetMonth = dayjs(payload.target_month, "YYYY-MM-DD")
+      .endOf('month')
       .format("YYYY-MM-DD");
   } else {
     console.error(
-      "Invalid latest_actual_month format. Received:",
-      payload.latest_actual_month
+      "Invalid target_month format. Received:",
+      payload.target_month
     );
     throw new Error(
-      "latest_actual_month must be in 'MMMM-YYYY' or 'YYYY-MM-DD' format"
+      "target_month must be in 'YYYY-MM-DD' format"
     );
   }
 
   console.log(
-    `Converted latest_actual_month ('${payload.latest_actual_month}') to end of month: ${latestActualMonth}`
+    `Converted target_month from '${payload.target_month}' to month-end: ${targetMonth}`
   );
 
   // 3. Validate and parse consensus_forecast
@@ -278,9 +385,7 @@ const updateConsensusForecast = async (payload) => {
     arr(payload.sku_code),
     arr(payload.channel_name),
     model_name,
-    payload.start_date,
-    payload.end_date,
-    latestActualMonth,
+    targetMonth, // Now contains the month-end date
   ];
 
   console.log("Prepared SQL parameters:", params);
@@ -297,8 +402,7 @@ const updateConsensusForecast = async (payload) => {
       AND sku_code = ANY($7)
       AND channel_name = ANY($8)
       AND model_name = $9
-      AND item_date BETWEEN $10 AND $11
-      AND item_date > $12
+      AND DATE(item_date) = $10
   `;
 
   console.log("SQL Query to execute:\n", sql);
