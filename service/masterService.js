@@ -73,6 +73,16 @@ const getAllChannels = async () => {
   }
 };
 
+const getAllModels = async () => {
+  try {
+    const result = await query("select * from dim_models");
+    return result.rows;
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
 const getPlantsByCity = async (city_id) => {
   const result = await query("SELECT * FROM dim_plant WHERE city_id = $1", [
     city_id,
@@ -441,4 +451,5 @@ module.exports = {
   getCategoriesByPlants,
   getSkusByCategories,
   updateConsensusForecast,
+  getAllModels
 };

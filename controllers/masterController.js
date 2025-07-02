@@ -24,6 +24,7 @@ const {
   getForecastData,
   getForecastDataForTest,
   updateConsensusForecast,
+  getAllModels
 } = require("../service/masterService");
 
 const getAllStateData = async (req, res) => {
@@ -94,6 +95,15 @@ const getAllCountriesData = async (req, res) => {
   }
 };
 
+const getAllModelsData = async (req, res) => {
+  try {
+    const result = await getAllModels();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 // GET /states?country_id=1
 const fetchStates = async (req, res) => {
   try {
@@ -199,4 +209,5 @@ module.exports = {
   fetchForecastData,
   getForecastDataController,
   getPlantsByCities,
+  getAllModelsData
 };
