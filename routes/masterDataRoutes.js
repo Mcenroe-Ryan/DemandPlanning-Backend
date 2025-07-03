@@ -15,7 +15,8 @@ const {
   fetchSkus,
   fetchForecastData,
   getForecastDataController,
-  getAllModelsData
+  getAllModelsData,
+  getAllEventsData
 } = require("../controllers/masterController");
 const service = require('../service/masterService');
 
@@ -33,6 +34,7 @@ router.get('/categories', fetchCategories);
 router.get('/skus', fetchSkus);
 router.get('/forecast', fetchForecastData);
 router.get('/models',getAllModelsData);
+router.get('/events',getAllEventsData);
 
 // POST routes
 router.post('/forecast-test', getForecastDataController);

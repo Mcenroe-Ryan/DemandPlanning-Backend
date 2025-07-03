@@ -83,6 +83,16 @@ const getAllModels = async () => {
   }
 };
 
+const getAllEvents = async () => {
+  try {
+    const result = await query("select * from dim_event");
+    return result.rows;
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
 const getPlantsByCity = async (city_id) => {
   const result = await query("SELECT * FROM dim_plant WHERE city_id = $1", [
     city_id,
@@ -105,7 +115,7 @@ const getSkusByCategory = async (category_id) => {
 };
 
 const getForecastData = async (filters) => {
-  const model_name = "XGBoost";
+  const model_name = filters.model_name || "XGBoost";
   const start_date = filters.startDate;
   const end_date = filters.endDate;
   const whereClauses = ["model_name = $1", "item_date BETWEEN $2 AND $3"];
@@ -219,16 +229,14 @@ const getSkusByCategories = async (categoryIds) => {
 
 //   const requiredParams = [
 //     "country_name",
-//     "state_name",
+//     "state_name", 
 //     "city_name",
 //     "plant_name",
 //     "category_name",
 //     "sku_code",
 //     "channel_name",
-//     // "start_date",
-//     // "end_date",
 //     "consensus_forecast",
-//     "latest_actual_month",
+//     "target_month",
 //   ];
 
 //   // 1. Validate required fields
@@ -239,29 +247,26 @@ const getSkusByCategories = async (categoryIds) => {
 //     }
 //   }
 
-//   // 2. Parse and validate latest_actual_month
-//   let latestActualMonth;
+//   // 2. Parse and validate target_month, then convert to month-end
+//   let targetMonth;
 
-//   if (dayjs(payload.latest_actual_month, "MMMM-YYYY", true).isValid()) {
-//     latestActualMonth = dayjs(payload.latest_actual_month, "MMMM-YYYY")
-//       .endOf("month")
-//       .format("YYYY-MM-DD");
-//   } else if (dayjs(payload.latest_actual_month, "YYYY-MM-DD", true).isValid()) {
-//     latestActualMonth = dayjs(payload.latest_actual_month, "YYYY-MM-DD")
-//       .endOf("month")
+//   if (dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
+//     // FIXED: Convert beginning of month to end of month since backend stores month-end dates
+//     targetMonth = dayjs(payload.target_month, "YYYY-MM-DD")
+//       .endOf('month')
 //       .format("YYYY-MM-DD");
 //   } else {
 //     console.error(
-//       "Invalid latest_actual_month format. Received:",
-//       payload.latest_actual_month
+//       "Invalid target_month format. Received:",
+//       payload.target_month
 //     );
 //     throw new Error(
-//       "latest_actual_month must be in 'MMMM-YYYY' or 'YYYY-MM-DD' format"
+//       "target_month must be in 'YYYY-MM-DD' format"
 //     );
 //   }
 
 //   console.log(
-//     `Converted latest_actual_month ('${payload.latest_actual_month}') to end of month: ${latestActualMonth}`
+//     `Converted target_month from '${payload.target_month}' to month-end: ${targetMonth}`
 //   );
 
 //   // 3. Validate and parse consensus_forecast
@@ -288,9 +293,7 @@ const getSkusByCategories = async (categoryIds) => {
 //     arr(payload.sku_code),
 //     arr(payload.channel_name),
 //     model_name,
-//     // payload.start_date,
-//     // payload.end_date,
-//     latestActualMonth,
+//     targetMonth, // Now contains the month-end date
 //   ];
 
 //   console.log("Prepared SQL parameters:", params);
@@ -338,7 +341,8 @@ const updateConsensusForecast = async (payload) => {
     "sku_code",
     "channel_name",
     "consensus_forecast",
-    "target_month", // Changed from latest_actual_month
+    "target_month",
+    "model_name", 
   ];
 
   // 1. Validate required fields
@@ -353,7 +357,7 @@ const updateConsensusForecast = async (payload) => {
   let targetMonth;
 
   if (dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
-    // FIXED: Convert beginning of month to end of month since backend stores month-end dates
+    // Convert beginning of month to end of month since backend stores month-end dates
     targetMonth = dayjs(payload.target_month, "YYYY-MM-DD")
       .endOf('month')
       .format("YYYY-MM-DD");
@@ -381,8 +385,7 @@ const updateConsensusForecast = async (payload) => {
     throw new Error("consensus_forecast must be a valid number");
   }
 
-  // 4. Prepare SQL parameters
-  const model_name = "XGBoost";
+  const model_name = payload.model_name || "XGBoost"; // Default fallback
   const arr = (v) => (Array.isArray(v) ? v : [v]);
 
   const params = [
@@ -394,13 +397,14 @@ const updateConsensusForecast = async (payload) => {
     arr(payload.category_name),
     arr(payload.sku_code),
     arr(payload.channel_name),
-    model_name,
-    targetMonth, // Now contains the month-end date
+    model_name, // 
+    targetMonth,
   ];
 
   console.log("Prepared SQL parameters:", params);
+  console.log(`Using model_name: ${model_name}`);
 
-  // 5. SQL query
+  // 5. SQL query (unchanged)
   const sql = `
     UPDATE public.demand_forecast
     SET consensus_forecast = $1
@@ -420,11 +424,12 @@ const updateConsensusForecast = async (payload) => {
   // 6. Execute query
   try {
     const result = await query(sql, params);
-    console.log(`Updated ${result.rowCount} row(s) for consensus_forecast.`);
+    console.log(`Updated ${result.rowCount} row(s) for consensus_forecast using model: ${model_name}.`);
     return {
       success: true,
-      message: `Updated ${result.rowCount} record(s) for consensus_forecast.`,
+      message: `Updated ${result.rowCount} record(s) for consensus_forecast using model: ${model_name}.`,
       updatedCount: result.rowCount,
+      modelUsed: model_name, 
     };
   } catch (error) {
     console.error("Error updating consensus_forecast:", error);
@@ -451,5 +456,6 @@ module.exports = {
   getCategoriesByPlants,
   getSkusByCategories,
   updateConsensusForecast,
-  getAllModels
+  getAllModels,
+  getAllEvents
 };
