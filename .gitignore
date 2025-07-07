@@ -4,7 +4,7 @@ node_modules/
 excelDataPush/*.csv
 
 # environment variables
-.env
+.env.production
 
 # logs
 logs/
