@@ -159,6 +159,7 @@ const getForecastData = async (filters) => {
       sum(inventory_level_pct) as inventory_level_pct,
       sum(stock_out_days) as stock_out_days,
       sum(on_hand_units) as on_hand_units,
+      AVG(mape) AS avg_mape,
       month_name
     FROM public.demand_forecast
     WHERE ${whereClauses.join(" AND ")}
@@ -166,6 +167,7 @@ const getForecastData = async (filters) => {
     ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
   `;
   const result = await query(queryText, values);
+  // console.log(result)
   return result.rows;
 };
 
