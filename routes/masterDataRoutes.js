@@ -16,7 +16,8 @@ const {
   fetchForecastData,
   getForecastDataController,
   getAllModelsData,
-  getAllEventsData
+  getAllEventsData,
+  getAllAlertsAndErrorsData
 } = require("../controllers/masterController");
 const service = require('../service/masterService');
 
@@ -35,7 +36,8 @@ router.get('/skus', fetchSkus);
 router.get('/forecast', fetchForecastData);
 router.get('/models',getAllModelsData);
 router.get('/events',getAllEventsData);
-
+router.get('/getAllAlerts',getAllAlertsAndErrorsData);
+  
 // POST routes
 router.post('/forecast-test', getForecastDataController);
 
@@ -105,6 +107,15 @@ router.post('/skus-by-categories', async (req, res) => {
 router.post('/forecast', async (req, res) => {
   try {
     const data = await service.getForecastData(req.body);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/forecastAlerts', async (req, res) => {
+  try {
+    const data = await service.getForecastAlertData(req.body);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });

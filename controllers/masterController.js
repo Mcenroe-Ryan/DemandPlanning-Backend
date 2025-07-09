@@ -25,7 +25,8 @@ const {
   getForecastDataForTest,
   updateConsensusForecast,
   getAllModels,
-  getAllEvents
+  getAllEvents,
+  getAllAlertsAndErrors
 } = require("../service/masterService");
 
 const getAllStateData = async (req, res) => {
@@ -109,6 +110,16 @@ const getAllModelsData = async (req, res) => {
 const getAllEventsData = async (req, res) => {
   try {
     const result = await getAllEvents();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getAllAlertsAndErrorsData = async (req, res) => {
+  try {
+    const result = await getAllAlertsAndErrors();
     res.json(result);
   } catch (err) {
     console.error("Database error:", err);
@@ -222,5 +233,6 @@ module.exports = {
   getForecastDataController,
   getPlantsByCities,
   getAllModelsData,
-  getAllEventsData
+  getAllEventsData,
+  getAllAlertsAndErrorsData
 };
