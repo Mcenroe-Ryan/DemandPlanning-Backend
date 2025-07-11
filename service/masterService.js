@@ -241,7 +241,7 @@ const updateConsensusForecast = async (payload) => {
 
   const requiredParams = [
     "country_name",
-    "state_name", 
+    "state_name",
     "city_name",
     "plant_name",
     "category_name",
@@ -249,7 +249,7 @@ const updateConsensusForecast = async (payload) => {
     "channel_name",
     "consensus_forecast",
     "target_month",
-    "model_name", 
+    "model_name",
   ];
 
   // 1. Validate required fields
@@ -266,21 +266,19 @@ const updateConsensusForecast = async (payload) => {
   if (dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
     // Convert beginning of month to end of month since backend stores month-end dates
     targetMonth = dayjs(payload.target_month, "YYYY-MM-DD")
-      .endOf('month')
+      .endOf("month")
       .format("YYYY-MM-DD");
   } else {
     console.error(
       "Invalid target_month format. Received:",
       payload.target_month
     );
-    throw new Error(
-      "target_month must be in 'YYYY-MM-DD' format"
-    );
+    throw new Error("target_month must be in 'YYYY-MM-DD' format");
   }
 
-  console.log(
-    `Converted target_month from '${payload.target_month}' to month-end: ${targetMonth}`
-  );
+  // console.log(
+  //   `Converted target_month from '${payload.target_month}' to month-end: ${targetMonth}`
+  // );
 
   // 3. Validate and parse consensus_forecast
   const consensusValue = Number(payload.consensus_forecast);
@@ -304,7 +302,7 @@ const updateConsensusForecast = async (payload) => {
     arr(payload.category_name),
     arr(payload.sku_code),
     arr(payload.channel_name),
-    model_name, // 
+    model_name, //
     targetMonth,
   ];
 
@@ -331,12 +329,14 @@ const updateConsensusForecast = async (payload) => {
   // 6. Execute query
   try {
     const result = await query(sql, params);
-    // console.log(`Updated ${result.rowCount} row(s) for consensus_forecast using model: ${model_name}.`);
+    // console.log(
+    //   `Updated ${result.rowCount} row(s) for consensus_forecast using model: ${model_name}.`
+    // );
     return {
       success: true,
       message: `Updated ${result.rowCount} record(s) for consensus_forecast using model: ${model_name}.`,
       updatedCount: result.rowCount,
-      modelUsed: model_name, 
+      modelUsed: model_name,
     };
   } catch (error) {
     console.error("Error updating consensus_forecast:", error);
@@ -347,14 +347,14 @@ const updateConsensusForecast = async (payload) => {
 const getForecastAlertData = async (filters) => {
   const model_name = filters.model_name || "XGBoost";
 
-  // 🔥 Dynamically calculate 6 months back and forward
+  // Dynamically calculate 6 months back and forward
   const now = new Date();
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1);
   const sixMonthsAhead = new Date(now.getFullYear(), now.getMonth() + 6 + 1, 0); // end of 6th future month
 
   // Convert to YYYY-MM-DD format
-  const start_date = sixMonthsAgo.toISOString().split('T')[0];
-  const end_date = sixMonthsAhead.toISOString().split('T')[0];
+  const start_date = sixMonthsAgo.toISOString().split("T")[0];
+  const end_date = sixMonthsAhead.toISOString().split("T")[0];
 
   const whereClauses = ["model_name = $1", "item_date BETWEEN $2 AND $3"];
   const values = [model_name, start_date, end_date];
@@ -395,7 +395,7 @@ const getForecastAlertData = async (filters) => {
   `;
 
   const result = await query(queryText, values);
-  console.log(result);
+  // console.log(result);
   return result.rows;
 };
 
@@ -421,5 +421,5 @@ module.exports = {
   getAllModels,
   getAllEvents,
   getAllAlertsAndErrors,
-  getForecastAlertData
+  getForecastAlertData,
 };
