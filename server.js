@@ -1,40 +1,67 @@
+// const express = require("express");
+// const cors = require("cors");
+// const app = express();
+// const PORT = process.env.PORT || 5000;
+// const host = process.env.HOST || 'localhost';
+
+// const mainRoutes = require("./routes/masterDataRoutes");
+
+// // Middleware
+// app.use(cors({
+//   origin: 'http://localhost:5173'
+// }));
+// app.use(express.json());
+
+// // Routes
+// app.use("/api", mainRoutes);
+
+// // Root route
+// app.get("/", (req, res) => {
+//   res.send("Backend API is running");
+// });
+
+// // Start server
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
+dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || "0.0.0.0"; // Ensures it works on EC2
 
 const mainRoutes = require("./routes/masterDataRoutes");
 
-const path = require("path");
-const dotenv = require("dotenv");
-//const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env";
+// CORS setup – allows local dev and production frontend
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL // Optional: set this in .env for production
+];
 
-const envPath = process.env.NODE_ENV === "production" 
-  ? path.resolve(__dirname, ".env.production") 
-  : path.resolve(__dirname, ".env");
-
-console.log(`✅ Loading environment file: ${envPath}`);
-console.log(`📝 DB Host: ${process.env.DB_HOST || 'development'}`); 
-dotenv.config({ path: envPath });
-
-// dotenv.config({ path: path.resolve(__dirname, envFile) });
-// Middleware
 app.use(cors({
-  origin: '*'
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
 }));
+
 app.use(express.json());
 
 // Routes
 app.use("/api", mainRoutes);
 
-// Root route
+// Health check
 app.get("/", (req, res) => {
-  res.send("Backend API is running");
+  res.send("✅ Backend API is running");
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📝 DB Host: ${process.env.DB_HOST || 'development'}`);  
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
 });
