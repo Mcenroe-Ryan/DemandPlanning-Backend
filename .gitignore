@@ -5,7 +5,7 @@ excelDataPush/*.csv
 
 # environment variables
 .env.production
-
+.env
 # logs
 logs/
 *.log
