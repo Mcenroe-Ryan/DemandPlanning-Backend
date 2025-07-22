@@ -344,19 +344,89 @@ const updateConsensusForecast = async (payload) => {
   }
 };
 
+// const getForecastAlertData = async (filters) => {
+//   console.log(filters);
+//   const model_name = filters.model_name || "XGBoost";
+
+//   // Dynamically calculate 6 months back and forward
+//   const now = new Date();
+//   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+//   const sixMonthsAhead = new Date(now.getFullYear(), now.getMonth() + 6 + 1, 0); // end of 6th future month
+
+//   // Convert to YYYY-MM-DD format
+//   const start_date = sixMonthsAgo.toISOString().split("T")[0];
+//   const end_date = sixMonthsAhead.toISOString().split("T")[0];
+
+//   const whereClauses = ["model_name = $1", "item_date BETWEEN $2 AND $3"];
+//   const values = [model_name, start_date, end_date];
+//   let idx = 4;
+
+//   const filterMap = {
+//     country: "country_name",
+//     state: "state_name",
+//     cities: "city_name",
+//     plants: "plant_name",
+//     categories: "category_name",
+//     skus: "sku_code",
+//     channels: "channel_name",
+//     models:"model_name"
+//   };
+
+//   for (const [inputKey, columnName] of Object.entries(filterMap)) {
+//     const val = filters[inputKey];
+//     if (val) {
+//       if (Array.isArray(val) && val.length > 0) {
+//         whereClauses.push(`${columnName} = ANY($${idx})`);
+//         values.push(val);
+//       } else if (typeof val === "string" || typeof val === "number") {
+//         whereClauses.push(`${columnName} = $${idx}`);
+//         values.push(val);
+//       }
+//       idx++;
+//     }
+//   }
+
+//   const queryText = `
+//     SELECT 
+//       actual_units,
+//       ml_forecast,
+//       sales_week_forecast
+//     FROM public.weekly_sales_forecast
+//     WHERE ${whereClauses.join(" AND ")}
+//     ORDER BY item_date
+//   `;
+
+//   const result = await query(queryText, values);
+//   console.log(result);
+//   return result.rows;
+// };
+
 const getForecastAlertData = async (filters) => {
+  // console.log(filters);
   const model_name = filters.model_name || "XGBoost";
 
-  // Dynamically calculate 6 months back and forward
-  const now = new Date();
-  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1);
-  const sixMonthsAhead = new Date(now.getFullYear(), now.getMonth() + 6 + 1, 0); // end of 6th future month
+  let start_date, end_date;
+  
+  if (filters.startDate && filters.endDate) {
+    start_date = filters.startDate;
+    end_date = filters.endDate;
+  } else {
+    const now = new Date();
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+    
+    let futureYear = now.getFullYear();
+    let futureMonth = now.getMonth() + 6;
+    if (futureMonth > 11) {
+      futureYear += Math.floor(futureMonth / 12);
+      futureMonth = futureMonth % 12;
+    }
+    const sixMonthsAhead = new Date(futureYear, futureMonth + 1, 0);
+    
+    start_date = sixMonthsAgo.toISOString().split("T")[0];
+    end_date = sixMonthsAhead.toISOString().split("T")[0];
+  }
 
-  // Convert to YYYY-MM-DD format
-  const start_date = sixMonthsAgo.toISOString().split("T")[0];
-  const end_date = sixMonthsAhead.toISOString().split("T")[0];
-
-  const whereClauses = ["model_name = $1", "item_date BETWEEN $2 AND $3"];
+  const whereClauses = ["model_name = $1", "sales_week_start BETWEEN $2 AND $3"];
   const values = [model_name, start_date, end_date];
   let idx = 4;
 
@@ -388,16 +458,17 @@ const getForecastAlertData = async (filters) => {
     SELECT 
       actual_units,
       ml_forecast,
-      month_name
-    FROM public.demand_forecast
+      sales_week_start
+    FROM public.weekly_sales_forecast
     WHERE ${whereClauses.join(" AND ")}
-    ORDER BY item_date
+    ORDER BY sales_week_start  
   `;
 
   const result = await query(queryText, values);
   // console.log(result);
   return result.rows;
 };
+
 
 module.exports = {
   // demand_planning code
