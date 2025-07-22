@@ -177,7 +177,6 @@ const getForecastData = async (filters) => {
     ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
   `;
   const result = await query(queryText, values);
-  // console.log(result)
   return result.rows;
 };
 
@@ -237,8 +236,6 @@ const getSkusByCategories = async (categoryIds) => {
 };
 
 const updateConsensusForecast = async (payload) => {
-  // console.log("Received payload:", payload);
-
   const requiredParams = [
     "country_name",
     "state_name",
@@ -276,10 +273,6 @@ const updateConsensusForecast = async (payload) => {
     throw new Error("target_month must be in 'YYYY-MM-DD' format");
   }
 
-  // console.log(
-  //   `Converted target_month from '${payload.target_month}' to month-end: ${targetMonth}`
-  // );
-
   // 3. Validate and parse consensus_forecast
   const consensusValue = Number(payload.consensus_forecast);
   if (isNaN(consensusValue)) {
@@ -306,9 +299,6 @@ const updateConsensusForecast = async (payload) => {
     targetMonth,
   ];
 
-  // console.log("Prepared SQL parameters:", params);
-  // console.log(`Using model_name: ${model_name}`);
-
   // 5. SQL query (unchanged)
   const sql = `
     UPDATE public.demand_forecast
@@ -323,15 +313,8 @@ const updateConsensusForecast = async (payload) => {
       AND model_name = $9
       AND DATE(item_date) = $10
   `;
-
-  // console.log("SQL Query to execute:\n", sql);
-
-  // 6. Execute query
   try {
     const result = await query(sql, params);
-    // console.log(
-    //   `Updated ${result.rowCount} row(s) for consensus_forecast using model: ${model_name}.`
-    // );
     return {
       success: true,
       message: `Updated ${result.rowCount} record(s) for consensus_forecast using model: ${model_name}.`,
@@ -344,66 +327,8 @@ const updateConsensusForecast = async (payload) => {
   }
 };
 
-// const getForecastAlertData = async (filters) => {
-//   console.log(filters);
-//   const model_name = filters.model_name || "XGBoost";
-
-//   // Dynamically calculate 6 months back and forward
-//   const now = new Date();
-//   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1);
-//   const sixMonthsAhead = new Date(now.getFullYear(), now.getMonth() + 6 + 1, 0); // end of 6th future month
-
-//   // Convert to YYYY-MM-DD format
-//   const start_date = sixMonthsAgo.toISOString().split("T")[0];
-//   const end_date = sixMonthsAhead.toISOString().split("T")[0];
-
-//   const whereClauses = ["model_name = $1", "item_date BETWEEN $2 AND $3"];
-//   const values = [model_name, start_date, end_date];
-//   let idx = 4;
-
-//   const filterMap = {
-//     country: "country_name",
-//     state: "state_name",
-//     cities: "city_name",
-//     plants: "plant_name",
-//     categories: "category_name",
-//     skus: "sku_code",
-//     channels: "channel_name",
-//     models:"model_name"
-//   };
-
-//   for (const [inputKey, columnName] of Object.entries(filterMap)) {
-//     const val = filters[inputKey];
-//     if (val) {
-//       if (Array.isArray(val) && val.length > 0) {
-//         whereClauses.push(`${columnName} = ANY($${idx})`);
-//         values.push(val);
-//       } else if (typeof val === "string" || typeof val === "number") {
-//         whereClauses.push(`${columnName} = $${idx}`);
-//         values.push(val);
-//       }
-//       idx++;
-//     }
-//   }
-
-//   const queryText = `
-//     SELECT 
-//       actual_units,
-//       ml_forecast,
-//       sales_week_forecast
-//     FROM public.weekly_sales_forecast
-//     WHERE ${whereClauses.join(" AND ")}
-//     ORDER BY item_date
-//   `;
-
-//   const result = await query(queryText, values);
-//   console.log(result);
-//   return result.rows;
-// };
-
 const getForecastAlertData = async (filters) => {
-  // console.log(filters);
-  const model_name = filters.model_name || "XGBoost";
+  const model_name = filters.model_name;
 
   let start_date, end_date;
   
@@ -465,7 +390,6 @@ const getForecastAlertData = async (filters) => {
   `;
 
   const result = await query(queryText, values);
-  // console.log(result);
   return result.rows;
 };
 
