@@ -18,6 +18,11 @@ const {
   getAllModelsData,
   getAllEventsData,
   getAllAlertsAndErrorsData,
+  //compare model
+  getDsModelData,
+  getDsModelsFeaturesData,
+  getDsModelMetricsData,
+  getFvaVsStatsData
 } = require("../controllers/masterController");
 const service = require("../service/masterService");
 
@@ -37,6 +42,12 @@ router.get("/forecast", fetchForecastData);
 router.get("/models", getAllModelsData);
 router.get("/events", getAllEventsData);
 router.get("/getAllAlerts", getAllAlertsAndErrorsData);
+
+// Get Routes for Compare Models
+router.get("/getDsModelData",getDsModelData);
+router.get("/getDsModelFeaturesData",getDsModelsFeaturesData);
+router.get("/getDsModelMetricsData",getDsModelMetricsData);
+router.get("/getFvaVsStatsData",getFvaVsStatsData);
 
 // POST routes
 router.post("/forecast-test", getForecastDataController);

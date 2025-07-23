@@ -26,7 +26,12 @@ const {
   updateConsensusForecast,
   getAllModels,
   getAllEvents,
-  getAllAlertsAndErrors
+  getAllAlertsAndErrors,
+  //compare model
+  getDsModels,
+  getDsModelsFeatures,
+  getDsModelMetrics,
+  getFvaVsStats
 } = require("../service/masterService");
 
 const getAllStateData = async (req, res) => {
@@ -216,6 +221,46 @@ const getPlantsByCities = async (city_ids) => {
   return result.rows;
 };
 
+const getDsModelData = async (req, res) => {
+  try {
+    const result = await getDsModels();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getDsModelsFeaturesData = async (req, res) => {
+  try {
+    const result = await getDsModelsFeatures();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getDsModelMetricsData = async (req, res) => {
+  try {
+    const result = await getDsModelMetrics();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getFvaVsStatsData = async (req, res) => {
+  try {
+    const result = await getFvaVsStats();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllCountriesData,
   getAllStateData,
@@ -234,5 +279,10 @@ module.exports = {
   getPlantsByCities,
   getAllModelsData,
   getAllEventsData,
-  getAllAlertsAndErrorsData
+  getAllAlertsAndErrorsData,
+  //Compare models
+  getDsModelData,
+  getDsModelsFeaturesData,
+  getDsModelMetricsData,
+  getFvaVsStatsData
 };

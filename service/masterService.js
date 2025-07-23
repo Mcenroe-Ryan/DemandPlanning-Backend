@@ -393,6 +393,47 @@ const getForecastAlertData = async (filters) => {
   return result.rows;
 };
 
+//compare model queries
+const getDsModels = async () => {
+  try {
+    const result = await query("select * from ds_model");
+    return result.rows;
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
+const getDsModelsFeatures = async () => {
+  try {
+    const result = await query("select * from ds_model_features");
+    return result.rows;
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
+const getDsModelMetrics= async () => {
+  try {
+    const result = await query("select * from ds_model_metric");
+    return result.rows;
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
+const getFvaVsStats= async () => {
+  try {
+    const result = await query("select * from fva_vs_stats");
+    return result.rows;
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
 
 module.exports = {
   // demand_planning code
@@ -417,4 +458,9 @@ module.exports = {
   getAllEvents,
   getAllAlertsAndErrors,
   getForecastAlertData,
+//compare model 
+  getDsModels,
+  getDsModelsFeatures,
+  getDsModelMetrics,
+  getFvaVsStats
 };
