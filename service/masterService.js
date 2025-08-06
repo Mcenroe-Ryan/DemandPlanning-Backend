@@ -434,6 +434,31 @@ const getFvaVsStats= async () => {
   }
 };
 
+const alertCountService = async () => {
+  try {
+    const result = await query(
+      "SELECT COUNT(*) AS error_count FROM forecast_error WHERE error_type = 'error'"
+    );
+    // result.rows[0].error_count will be the count as a string, so convert to number if needed
+    return Number(result.rows[0].error_count);
+  } catch (err) {
+    console.error("Database error:", err);
+    throw err;
+  }
+};
+
+const updateAlertsStrikethroughService = async (id, is_checked) => {
+  const queryText = `
+    UPDATE forecast_error
+    SET is_checked = $1
+    WHERE id = $2
+    RETURNING *;
+  `;
+  const values = [is_checked, id];
+  const result = await query(queryText, values);
+
+  return result.rows[0];
+};
 
 module.exports = {
   // demand_planning code
@@ -458,6 +483,8 @@ module.exports = {
   getAllEvents,
   getAllAlertsAndErrors,
   getForecastAlertData,
+  alertCountService,
+  updateAlertsStrikethroughService,
 //compare model 
   getDsModels,
   getDsModelsFeatures,

@@ -27,6 +27,8 @@ const {
   getAllModels,
   getAllEvents,
   getAllAlertsAndErrors,
+  alertCountService,
+  updateAlertsStrikethroughService,
   //compare model
   getDsModels,
   getDsModelsFeatures,
@@ -261,6 +263,38 @@ const getFvaVsStatsData = async (req, res) => {
   }
 };
 
+const getAlertCountData = async (req, res) => {
+  try {
+    const result = await alertCountService();
+    res.json(result);
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const updateAlertsStrikethroughController = async (req, res) => {
+  const { id } = req.params;
+  const { in_checked } = req.body;
+
+  if (typeof in_checked !== "boolean") {
+    return res.status(400).json({ error: "`in_checked` must be a boolean." });
+  }
+
+  try {
+    const updatedRow = await updateAlertsStrikethroughService(id, in_checked);
+
+    if (!updatedRow) {
+      return res.status(404).json({ error: "Record not found." });
+    }
+
+    res.json({ success: true, updated: updatedRow });
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
 module.exports = {
   getAllCountriesData,
   getAllStateData,
@@ -280,6 +314,8 @@ module.exports = {
   getAllModelsData,
   getAllEventsData,
   getAllAlertsAndErrorsData,
+  getAlertCountData,
+  updateAlertsStrikethroughController,
   //Compare models
   getDsModelData,
   getDsModelsFeaturesData,

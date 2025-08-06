@@ -18,6 +18,8 @@ const {
   getAllModelsData,
   getAllEventsData,
   getAllAlertsAndErrorsData,
+  getAlertCountData,
+  updateAlertsStrikethroughController,
   //compare model
   getDsModelData,
   getDsModelsFeaturesData,
@@ -42,6 +44,8 @@ router.get("/forecast", fetchForecastData);
 router.get("/models", getAllModelsData);
 router.get("/events", getAllEventsData);
 router.get("/getAllAlerts", getAllAlertsAndErrorsData);
+router.get("/getAlertCount", getAlertCountData);
+router.put("/forecast-error/:id", updateAlertsStrikethroughController);
 
 // Get Routes for Compare Models
 router.get("/getDsModelData",getDsModelData);
