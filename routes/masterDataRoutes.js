@@ -163,20 +163,23 @@ router.put("/forecast/consensus", async (req, res) => {
 });
 
 // Generate data for both countries
+// In routes, replace the generate/all route section:
 router.post("/generate/all", async (req, res) => {
   try {
     console.log("Starting data generation for both countries...");
 
-    // Clear all existing data first
-    console.log("🗑️  Clearing all existing data...");
-    const totalCleared = await dataService.clearTableData();
-    console.log(`✅ Cleared ${totalCleared} existing records`);
+    const DataGenerationService = require("../service/dataGenerationService").default;
+    const dataServiceInstance = new DataGenerationService();
+
+    console.log("Clearing all existing data...");
+    const totalCleared = await dataServiceInstance.clearTableData();
+    console.log(`Cleared ${totalCleared} existing records`);
 
     const results = [];
 
     // Generate India data
     try {
-      const indiaResult = await dataService.generateData("India", false); // false because we already cleared all data
+      const indiaResult = await dataServiceInstance.generateData("India");
       results.push({
         country: "India",
         success: true,
@@ -192,9 +195,9 @@ router.post("/generate/all", async (req, res) => {
       });
     }
 
-    // Generate USA data
+    // Generate USA data  
     try {
-      const usaResult = await dataService.generateData("USA", false); // false because we already cleared all data
+      const usaResult = await dataServiceInstance.generateData("USA");
       results.push({
         country: "USA",
         success: true,
