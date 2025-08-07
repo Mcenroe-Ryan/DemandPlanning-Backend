@@ -460,6 +460,7 @@ const updateAlertsStrikethroughService = async (id, is_checked) => {
   return result.rows[0];
 };
 
+
 module.exports = {
   // demand_planning code
   getAllState,
