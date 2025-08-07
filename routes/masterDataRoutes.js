@@ -168,7 +168,7 @@ router.post("/generate/all", async (req, res) => {
   try {
     console.log("Starting data generation for both countries...");
 
-    const DataGenerationService = require("../service/dataGenerationService").default;
+    const DataGenerationService = require("../service/dataGenerationService");
     const dataServiceInstance = new DataGenerationService();
 
     console.log("Clearing all existing data...");
@@ -195,7 +195,7 @@ router.post("/generate/all", async (req, res) => {
       });
     }
 
-    // Generate USA data  
+    // Generate USA data
     try {
       const usaResult = await dataServiceInstance.generateData("USA");
       results.push({

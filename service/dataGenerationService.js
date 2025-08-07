@@ -1,8 +1,8 @@
 // services/dataGenerationService.js
-import dayjs from "dayjs";
-import weekOfYear from "dayjs/plugin/weekOfYear.js";
-import pg from "pg";
-import fs from "fs";
+const dayjs = require("dayjs");
+const weekOfYear = require("dayjs/plugin/weekOfYear.js");
+const pg = require("pg");
+const fs = require("fs");
 
 dayjs.extend(weekOfYear);
 
@@ -20,6 +20,7 @@ class DataGenerationService {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
+  // ssl: { rejectUnauthorized: false } //for RDS
     });
   }
 
@@ -590,4 +591,4 @@ class DataGenerationService {
   }
 }
 
-export default DataGenerationService;
+module.exports = DataGenerationService;
