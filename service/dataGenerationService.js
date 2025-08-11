@@ -15,12 +15,12 @@ class DataGenerationService {
 
   createDbClient() {
     return new Client({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  // ssl: { rejectUnauthorized: false } //for RDS
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT,
+      // ssl: { rejectUnauthorized: false } //for RDS
     });
   }
 
@@ -420,15 +420,18 @@ class DataGenerationService {
       });
 
       let baseline = Math.round(
-        actual * this.getRandomBetweenOneAndOnePointFive(0.6, 1.8)
+        actual * getRandomBetweenOneAndOnePointFive(0.2, 1.8)
       );
 
       let consensus = Math.round(
         actual * this.getRandomBetweenOneAndOnePointFive(0.7, 1.4)
       );
 
-      let levelPct = this.getRandomBetweenOneAndOnePointFive(8, 20);
-      let stockOutDays = 2 + (Math.abs(i) % 5);
+      // let levelPct = this.getRandomBetweenOneAndOnePointFive(8, 20);
+      // let stockOutDays = 2 + (Math.abs(i) % 5);
+      let levelPct = Math.round(consensus / 2);
+      let stockOutDays = Math.round(getRandomIntInclusive(14, 21));
+
       let actual_percent = Math.round(
         this.getRandomBetweenOneAndOnePointFive(40, 50)
       );

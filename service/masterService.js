@@ -167,7 +167,7 @@ const getForecastData = async (filters) => {
       sum(consensus_forecast) as consensus_forecast,
       sum(revenue_forecast_lakhs) as revenue_forecast_lakhs,
       AVG(inventory_level_pct) as inventory_level_pct,
-      sum(stock_out_days) as stock_out_days,
+      AVG(stock_out_days) as stock_out_days,
       sum(on_hand_units) as on_hand_units,
       AVG(mape) AS avg_mape,
       month_name
