@@ -420,7 +420,7 @@ class DataGenerationService {
       });
 
       let baseline = Math.round(
-        actual * getRandomBetweenOneAndOnePointFive(0.2, 1.8)
+        actual * this.getRandomBetweenOneAndOnePointFive(0.2, 1.8)
       );
 
       let consensus = Math.round(
@@ -430,7 +430,7 @@ class DataGenerationService {
       // let levelPct = this.getRandomBetweenOneAndOnePointFive(8, 20);
       // let stockOutDays = 2 + (Math.abs(i) % 5);
       let levelPct = Math.round(consensus / 2);
-      let stockOutDays = Math.round(getRandomIntInclusive(14, 21));
+      let stockOutDays = Math.round(this.getRandomIntInclusive(14, 21));
 
       let actual_percent = Math.round(
         this.getRandomBetweenOneAndOnePointFive(40, 50)
@@ -569,17 +569,20 @@ class DataGenerationService {
       // Generate all data
       const allData = [];
       for (const product of products) {
+        try {         
         const records = await this.generateRecordsForProduct(
           product,
           config,
           seasonalityConfig
         );
-        allData.push(...records);
-      }
-
-      // Insert into database
+        allData.push(...records); 
+        } catch (error) {
+          console.log(error)
+        }
+      }      
+      // Insert into database      
       await this.insertData(allData);
-
+      console.log(' after insert');
       return {
         success: true,
         message: `✅ Successfully generated and inserted ${allData.length} records for ${country}`,

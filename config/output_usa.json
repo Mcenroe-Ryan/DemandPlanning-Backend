@@ -1,0 +1,722 @@
+[
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Breakfast Cereals",
+    "plant": "LA123",
+    "product_name": "Cornflakes - 200 gm",
+    "min": 2500,
+    "max": 4500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Breakfast Cereals",
+    "plant": "LA123",
+    "product_name": "Oats - 100 gm",
+    "min": 3000,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Condiments & Sauces",
+    "plant": "LA123",
+    "product_name": "Ketchup - 200 ml",
+    "min": 1000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Condiments & Sauces",
+    "plant": "LA123",
+    "product_name": "BBQ Sauce - 200 ml",
+    "min": 1000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Condiments & Sauces",
+    "plant": "LA123",
+    "product_name": "Hot Sauce - 100 ml",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Dairy & Alternatives",
+    "plant": "LA123",
+    "product_name": "Almond Milk - 200 ml",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "Los Angeles",
+    "category": "Dairy & Alternatives",
+    "plant": "LA123",
+    "product_name": "Yogurt - 200 ml",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Breakfast Cereals",
+    "plant": "SF124",
+    "product_name": "Cornflakes - 200 gm",
+    "min": 3000,
+    "max": 5000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Breakfast Cereals",
+    "plant": "SF124",
+    "product_name": "Oats - 100 gm",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Condiments & Sauces",
+    "plant": "SF124",
+    "product_name": "Ketchup - 200 ml",
+    "min": 1500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Condiments & Sauces",
+    "plant": "SF124",
+    "product_name": "BBQ Sauce - 200 ml",
+    "min": 1500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Condiments & Sauces",
+    "plant": "SF124",
+    "product_name": "Hot Sauce - 100 ml",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Dairy & Alternatives",
+    "plant": "SF124",
+    "product_name": "Almond Milk - 200 ml",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Francisco",
+    "category": "Dairy & Alternatives",
+    "plant": "SF124",
+    "product_name": "Yogurt - 200 ml",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Breakfast Cereals",
+    "plant": "SD125",
+    "product_name": "Cornflakes - 200 gm",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Breakfast Cereals",
+    "plant": "SD125",
+    "product_name": "Oats - 100 gm",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Condiments & Sauces",
+    "plant": "SD125",
+    "product_name": "Ketchup - 200 ml",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Condiments & Sauces",
+    "plant": "SD125",
+    "product_name": "BBQ Sauce - 200 ml",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Condiments & Sauces",
+    "plant": "SD125",
+    "product_name": "Hot Sauce - 100 ml",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Dairy & Alternatives",
+    "plant": "SD125",
+    "product_name": "Almond Milk - 200 ml",
+    "min": 1500,
+    "max": 2500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "California",
+    "city": "San Diego",
+    "category": "Dairy & Alternatives",
+    "plant": "SD125",
+    "product_name": "Yogurt - 200 ml",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Breakfast Cereals",
+    "plant": "HS201",
+    "product_name": "Cornflakes - 200 gm",
+    "min": 3000,
+    "max": 4500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Breakfast Cereals",
+    "plant": "HS201",
+    "product_name": "Oats - 100 gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Condiments & Sauces",
+    "plant": "HS201",
+    "product_name": "Hot Sauce - 100 ml",
+    "min": 1000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Condiments & Sauces",
+    "plant": "HS201",
+    "product_name": "BBQ Sauce - 200 ml",
+    "min": 1000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Condiments & Sauces",
+    "plant": "HS201",
+    "product_name": "Ketchup - 200 ml",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Seafood",
+    "plant": "HS201",
+    "product_name": "Frozen Shrimp - 250gm",
+    "min": 2000,
+    "max": 4500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Seafood",
+    "plant": "HS201",
+    "product_name": "Canned Tuna - 500gm",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Houston",
+    "category": "Seafood",
+    "plant": "HS201",
+    "product_name": "Salmon Fillets - 250gm",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Breakfast Cereals",
+    "plant": "Da202",
+    "product_name": "Cornflakes - 200 gm",
+    "min": 3000,
+    "max": 4000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Breakfast Cereals",
+    "plant": "Da202",
+    "product_name": "Oats - 100 gm",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Condiments & Sauces",
+    "plant": "Da202",
+    "product_name": "Hot Sauce - 100 ml",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Condiments & Sauces",
+    "plant": "Da202",
+    "product_name": "BBQ Sauce - 200 ml",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Condiments & Sauces",
+    "plant": "Da202",
+    "product_name": "Ketchup - 200 ml",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Seafood",
+    "plant": "Da202",
+    "product_name": "Frozen Shrimp - 250gm",
+    "min": 1500,
+    "max": 2500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Seafood",
+    "plant": "Da202",
+    "product_name": "Canned Tuna - 500gm",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Dallas",
+    "category": "Seafood",
+    "plant": "Da202",
+    "product_name": "Salmon Fillets - 250gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Breakfast Cereals",
+    "plant": "Au203",
+    "product_name": "Cornflakes - 200 gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Breakfast Cereals",
+    "plant": "Au203",
+    "product_name": "Oats - 100 gm",
+    "min": 1500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Condiments & Sauces",
+    "plant": "Au203",
+    "product_name": "Hot Sauce - 100 ml",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Condiments & Sauces",
+    "plant": "Au203",
+    "product_name": "BBQ Sauce - 200 ml",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Condiments & Sauces",
+    "plant": "Au203",
+    "product_name": "Ketchup - 200 ml",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Seafood",
+    "plant": "Au203",
+    "product_name": "Frozen Shrimp - 250gm",
+    "min": 1500,
+    "max": 2500,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Seafood",
+    "plant": "Au203",
+    "product_name": "Canned Tuna - 500gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  },
+  {
+    "state": "Texas",
+    "city": "Austin",
+    "category": "Seafood",
+    "plant": "Au203",
+    "product_name": "Salmon Fillets - 250gm",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "Nov",
+      "Dec"
+    ],
+    "dips": [
+      "Feb"
+    ]
+  }
+]

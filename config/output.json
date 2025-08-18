@@ -1,0 +1,650 @@
+[
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Sweet Mixes",
+    "plant": "Kar123",
+    "product_name": "Gulab Jamun - 200 gm",
+    "min": 3000,
+    "max": 5000,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Sweet Mixes",
+    "plant": "Kar123",
+    "product_name": "Coconut Burfi - 100 gm",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Beverages",
+    "plant": "Kar123",
+    "product_name": "Badam Milk - 200 ml",
+    "min": 1500,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": [
+      "June",
+      "July"
+    ]
+  },
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Beverages",
+    "plant": "Kar123",
+    "product_name": "Chocolate Milkshake - 200 ml",
+    "min": 1500,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": [
+      "June",
+      "July"
+    ]
+  },
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Masala",
+    "plant": "Kar123",
+    "product_name": "Garam Masala - 100gm",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Masala",
+    "plant": "Kar123",
+    "product_name": "Chilli Powder - 100gm",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Bengaluru",
+    "category": "Masala",
+    "plant": "Kar123",
+    "product_name": "Sambhar Powder - 100gm",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Sweet Mixes",
+    "plant": "Kar124",
+    "product_name": "Gulab Jamun - 200 gm",
+    "min": 2500,
+    "max": 4500,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Sweet Mixes",
+    "plant": "Kar124",
+    "product_name": "Coconut Burfi - 100 gm",
+    "min": 3000,
+    "max": 4000,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Beverages",
+    "plant": "Kar124",
+    "product_name": "Badam Milk - 200 ml",
+    "min": 1000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": [
+      "June",
+      "July"
+    ]
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Beverages",
+    "plant": "Kar124",
+    "product_name": "Chocolate Milkshake - 200 ml",
+    "min": 1000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": [
+      "June",
+      "July"
+    ]
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Masala",
+    "plant": "Kar124",
+    "product_name": "Garam Masala - 100gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Masala",
+    "plant": "Kar124",
+    "product_name": "Chilli Powder - 100gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Udupi",
+    "category": "Masala",
+    "plant": "Kar124",
+    "product_name": "Sambhar Powder - 100gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Sweet Mixes",
+    "plant": "Kar125",
+    "product_name": "Gulab Jamun - 200 gm",
+    "min": 3000,
+    "max": 4500,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Sweet Mixes",
+    "plant": "Kar125",
+    "product_name": "Coconut Burfi - 100 gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Beverages",
+    "plant": "Kar125",
+    "product_name": "Badam Milk - 200 ml",
+    "min": 1000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": [
+      "June",
+      "July"
+    ]
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Beverages",
+    "plant": "Kar125",
+    "product_name": "Chocolate Milkshake - 200 ml",
+    "min": 1000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": [
+      "June",
+      "July"
+    ]
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Masala",
+    "plant": "Kar125",
+    "product_name": "Garam Masala - 100gm",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Masala",
+    "plant": "Kar125",
+    "product_name": "Chilli Powder - 100gm",
+    "min": 2000,
+    "max": 4500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Karnataka",
+    "city": "Hubballi",
+    "category": "Masala",
+    "plant": "Kar125",
+    "product_name": "Sambhar Powder - 100gm",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Sweet Mixes",
+    "plant": "And126",
+    "product_name": "Gulab Jamun - 200 gm",
+    "min": 2500,
+    "max": 4000,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Sweet Mixes",
+    "plant": "And126",
+    "product_name": "Coconut Burfi - 100 gm",
+    "min": 2000,
+    "max": 4000,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Masala",
+    "plant": "And126",
+    "product_name": "Garam Masala - 100gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Masala",
+    "plant": "And126",
+    "product_name": "Chilli Powder - 100gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Masala",
+    "plant": "And126",
+    "product_name": "Sambhar Powder - 100gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Ready to eat",
+    "plant": "And126",
+    "product_name": "Insta Poha - 250gm",
+    "min": 1500,
+    "max": 2500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Ready to eat",
+    "plant": "And126",
+    "product_name": "Rava Upma - 500gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Tirupati",
+    "category": "Ready to eat",
+    "plant": "And126",
+    "product_name": "Dosa Mix - 250gm",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Sweet Mixes",
+    "plant": "And201",
+    "product_name": "Gulab Jamun - 200 gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Sweet Mixes",
+    "plant": "And201",
+    "product_name": "Coconut Burfi - 100 gm",
+    "min": 1500,
+    "max": 3500,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Masala",
+    "plant": "And201",
+    "product_name": "Garam Masala - 100gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Masala",
+    "plant": "And201",
+    "product_name": "Chilli Powder - 100gm",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Masala",
+    "plant": "And201",
+    "product_name": "Sambhar Powder - 100gm",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Ready to eat",
+    "plant": "And201",
+    "product_name": "Insta Poha - 250gm",
+    "min": 1500,
+    "max": 2500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Ready to eat",
+    "plant": "And201",
+    "product_name": "Rava Upma - 500gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Vijayawada",
+    "category": "Ready to eat",
+    "plant": "And201",
+    "product_name": "Dosa Mix - 250gm",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Sweet Mixes",
+    "plant": "And202",
+    "product_name": "Gulab Jamun - 200 gm",
+    "min": 3000,
+    "max": 4000,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Sweet Mixes",
+    "plant": "And202",
+    "product_name": "Coconut Burfi - 100 gm",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "Oct",
+      "Dec"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Masala",
+    "plant": "And202",
+    "product_name": "Garam Masala - 100gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Masala",
+    "plant": "And202",
+    "product_name": "Chilli Powder - 100gm",
+    "min": 1500,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Masala",
+    "plant": "And202",
+    "product_name": "Sambhar Powder - 100gm",
+    "min": 2000,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Ready to eat",
+    "plant": "And202",
+    "product_name": "Insta Poha - 250gm",
+    "min": 1500,
+    "max": 2500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Ready to eat",
+    "plant": "And202",
+    "product_name": "Rava Upma - 500gm",
+    "min": 2500,
+    "max": 3500,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  },
+  {
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "category": "Ready to eat",
+    "plant": "And202",
+    "product_name": "Dosa Mix - 250gm",
+    "min": 2000,
+    "max": 3000,
+    "trend_peaks": [
+      "May",
+      "Oct"
+    ],
+    "dips": []
+  }
+]
