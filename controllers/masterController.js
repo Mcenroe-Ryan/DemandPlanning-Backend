@@ -29,6 +29,7 @@ const {
   getAllAlertsAndErrors,
   alertCountService,
   updateAlertsStrikethroughService,
+  getDemandForecastFullScreen,
   //compare model
   getDsModels,
   getDsModelsFeatures,
@@ -295,6 +296,35 @@ const updateAlertsStrikethroughController = async (req, res) => {
   }
 };
 
+const getDemandForecastFullScreenController = async (req, res) => {
+  try {
+    const {
+      country_name,
+      state_name,
+      city_name,
+      plant_name,
+      category_name
+    } = req.body;
+
+    if (!country_name || !state_name || !city_name || !plant_name || !category_name) {
+      return res.status(400).json({ error: 'All location and category fields are required.' });
+    }
+
+    const data = await getDemandForecastFullScreen({
+      country_name,
+      state_name,
+      city_name,
+      plant_name,
+      category_name
+    });
+
+    return res.json(data);
+  } catch (err) {
+    console.error('Demand forecastvFull Screen fetch error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+};
+
 module.exports = {
   getAllCountriesData,
   getAllStateData,
@@ -316,6 +346,7 @@ module.exports = {
   getAllAlertsAndErrorsData,
   getAlertCountData,
   updateAlertsStrikethroughController,
+  getDemandForecastFullScreenController,
   //Compare models
   getDsModelData,
   getDsModelsFeaturesData,

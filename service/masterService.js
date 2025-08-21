@@ -461,6 +461,49 @@ const updateAlertsStrikethroughService = async (id, is_checked) => {
 };
 
 
+const getDemandForecastFullScreen = async (filters) => {
+  const {
+    country_name,
+    state_name,
+    city_name,
+    plant_name,
+    category_name
+  } = filters;
+
+  const queryText = `
+    SELECT
+      country_name, state_name, city_name, plant_name,
+      category_name, sku_code,
+      SUM(actual_units) AS actual_units,
+      SUM(baseline_forecast) AS baseline_forecast,
+      SUM(ml_forecast) AS ml_forecast,
+      SUM(sales_units) AS sales_units,
+      SUM(promotion_marketing) AS promotion_marketing,
+      SUM(consensus_forecast) AS consensus_forecast,
+      SUM(revenue_forecast_lakhs) AS revenue_forecast_lakhs,
+      AVG(inventory_level_pct) AS inventory_level_pct,
+      AVG(stock_out_days) AS stock_out_days,
+      SUM(on_hand_units) AS on_hand_units,
+      AVG(mape) AS avg_mape,
+      month_name
+    FROM public.demand_forecast
+    WHERE
+      country_name = $1 AND
+      state_name = $2 AND
+      city_name = $3 AND
+      plant_name = $4 AND
+      category_name = $5
+    GROUP BY month_name, country_name, state_name, city_name, plant_name, category_name, sku_code
+    ORDER BY month_name ASC;
+  `;
+
+  const params = [country_name, state_name, city_name, plant_name, category_name];
+
+  const { rows } = await query(queryText, params);
+  return rows;
+};
+
+
 module.exports = {
   // demand_planning code
   getAllState,
@@ -486,6 +529,7 @@ module.exports = {
   getForecastAlertData,
   alertCountService,
   updateAlertsStrikethroughService,
+  getDemandForecastFullScreen,
 //compare model 
   getDsModels,
   getDsModelsFeatures,

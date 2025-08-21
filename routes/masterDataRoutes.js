@@ -20,6 +20,7 @@ const {
   getAllAlertsAndErrorsData,
   getAlertCountData,
   updateAlertsStrikethroughController,
+  getDemandForecastFullScreenController,
   //compare model
   getDsModelData,
   getDsModelsFeaturesData,
@@ -240,5 +241,7 @@ router.post("/generate/all", async (req, res) => {
     });
   }
 });
+
+router.post('/demand-forecast-full-screen', getDemandForecastFullScreenController);
 
 module.exports = router;
