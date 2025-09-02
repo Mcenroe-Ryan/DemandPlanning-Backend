@@ -429,7 +429,7 @@ class DataGenerationService {
 
       // let levelPct = this.getRandomBetweenOneAndOnePointFive(8, 20);
       // let stockOutDays = 2 + (Math.abs(i) % 5);
-      let levelPct = Math.round(consensus / 2);
+      let levelPct = Math.round(consensus / this.getRandomBetweenOneAndOnePointFive(2, 2.5));
       let stockOutDays = Math.round(this.getRandomIntInclusive(14, 21));
 
       let actual_percent = Math.round(
