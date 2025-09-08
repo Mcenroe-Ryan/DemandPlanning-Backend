@@ -129,6 +129,15 @@ router.post("/forecast", async (req, res) => {
   }
 });
 
+router.post("/weekly-forecast", async (req, res) => {
+  try {
+    const data = await service.getWeekForecastData(req.body);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.post("/forecastAlerts", async (req, res) => {
   try {
     const data = await service.getForecastAlertData(req.body);
