@@ -157,8 +157,8 @@ const getForecastData = async (filters) => {
     }
   }
 
-  const queryText = `
-    SELECT 
+  
+    const queryText = `SELECT 
       sum(actual_units) as actual_units,
       sum(baseline_forecast) as baseline_forecast,
       sum(ml_forecast) as ml_forecast,
@@ -166,7 +166,7 @@ const getForecastData = async (filters) => {
       sum(promotion_marketing) as promotion_marketing,
       sum(consensus_forecast) as consensus_forecast,
       sum(revenue_forecast_lakhs) as revenue_forecast_lakhs,
-      AVG(inventory_level_pct) as inventory_level_pct,
+      sum(inventory_level_pct) as inventory_level_pct,
       AVG(stock_out_days) as stock_out_days,
       sum(on_hand_units) as on_hand_units,
       AVG(mape) AS avg_mape,
