@@ -192,6 +192,45 @@ class DataGenerationService {
     return actualValue;
   }
 
+  generateAdvancedBaseline(product, actual, itemDate, monthsFromNow) {
+    const monthIndex = dayjs(itemDate).month();
+
+    // 1. Category-specific bias
+    const categoryMultiplier = {
+      "Sweet Mixes": getRandomBetweenOneAndOnePointFive(0.8, 1.2),
+      Beverages: getRandomBetweenOneAndOnePointFive(1.1, 1.6),
+      Masala: getRandomBetweenOneAndOnePointFive(0.9, 1.3),
+      "Ready To Eat": getRandomBetweenOneAndOnePointFive(1.0, 1.5),
+    }[product.category_name];
+
+    // 2. Seasonal baseline bias (different from actual seasonality)
+    let seasonalBias = 1;
+    if ([1, 2, 10, 11].includes(monthIndex)) {
+      // Feb, Mar, Nov, Dec - baseline optimistic
+      seasonalBias = getRandomBetweenOneAndOnePointFive(1.2, 1.7);
+    } else if ([5, 6, 7].includes(monthIndex)) {
+      // Jun, Jul, Aug - baseline conservative
+      seasonalBias = getRandomBetweenOneAndOnePointFive(0.6, 0.9);
+    }
+
+    // 3. Future uncertainty
+    const futureUncertainty =
+      monthsFromNow > 0
+        ? getRandomBetweenOneAndOnePointFive(0.7, 1.4)
+        : getRandomBetweenOneAndOnePointFive(0.85, 1.15);
+
+    // 4. Random baseline-specific noise
+    const baselineNoise = getRandomBetweenOneAndOnePointFive(0.7, 1.3);
+
+    return Math.round(
+      actual *
+        categoryMultiplier *
+        seasonalBias *
+        futureUncertainty *
+        baselineNoise
+    );
+  }
+
   getSeasonalRange({
     state,
     category,
@@ -419,9 +458,10 @@ class DataGenerationService {
         defaultConfig: config.defaultConfig,
       });
 
-      let baseline = Math.round(
-        actual * this.getRandomBetweenOneAndOnePointFive(0.2, 1.8)
-      );
+      // let baseline = Math.round(
+      //   actual * this.getRandomBetweenOneAndOnePointFive(0.2, 1.8)
+      // );
+      let baseline = generateAdvancedBaseline(product, actual, itemDate, i);
 
       let consensus = Math.round(
         actual * this.getRandomBetweenOneAndOnePointFive(0.7, 1.4)
@@ -429,7 +469,9 @@ class DataGenerationService {
 
       // let levelPct = this.getRandomBetweenOneAndOnePointFive(8, 20);
       // let stockOutDays = 2 + (Math.abs(i) % 5);
-      let levelPct = Math.round(consensus / this.getRandomBetweenOneAndOnePointFive(2, 2.5));
+      let levelPct = Math.round(
+        consensus / this.getRandomBetweenOneAndOnePointFive(2, 2.5)
+      );
       let stockOutDays = Math.round(this.getRandomIntInclusive(14, 21));
 
       let actual_percent = Math.round(
@@ -569,20 +611,20 @@ class DataGenerationService {
       // Generate all data
       const allData = [];
       for (const product of products) {
-        try {         
-        const records = await this.generateRecordsForProduct(
-          product,
-          config,
-          seasonalityConfig
-        );
-        allData.push(...records); 
+        try {
+          const records = await this.generateRecordsForProduct(
+            product,
+            config,
+            seasonalityConfig
+          );
+          allData.push(...records);
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      }      
-      // Insert into database      
+      }
+      // Insert into database
       await this.insertData(allData);
-      console.log(' after insert');
+      console.log(" after insert");
       return {
         success: true,
         message: `✅ Successfully generated and inserted ${allData.length} records for ${country}`,

@@ -724,7 +724,7 @@ module.exports = {
   updateAlertsStrikethroughService,
   getDemandForecastFullScreen,
   getWeekForecastData,
-  //compare model
+//compare model 
   getDsModels,
   getDsModelsFeatures,
   getDsModelMetrics,
