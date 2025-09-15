@@ -516,8 +516,6 @@ const updateConsensusForecast = async (payload) => {
 //   }
 // };
 
-
-
 const getForecastAlertData = async (filters) => {
   const model_name = filters.model_name;
 
