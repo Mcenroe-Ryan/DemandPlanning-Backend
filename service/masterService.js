@@ -170,7 +170,7 @@ const getForecastData = async (filters) => {
       sum(on_hand_units) as on_hand_units,
       AVG(mape) AS avg_mape,
       month_name
-    FROM public.demand_forecast
+    FROM public.weekly_demand_forecast
     WHERE ${whereClauses.join(" AND ")}
     GROUP BY month_name
     ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
@@ -231,18 +231,7 @@ const getWeekForecastData = async (filters) => {
     ORDER BY week_name
   `;
 
-  // Debug logs
-  // console.log("=== getWeekForecastData Debug Logs ===");
-  // console.log("Filters received:", filters);
-  // console.log("Final WHERE clauses:", whereClauses);
-  // console.log("Values bound:", values);
-  // console.log("Generated SQL Query:\n", queryText);
-
   const result = await query(queryText, values);
-
-  // console.log("Query result row count:", result.rows.length);
-  // console.log("First row (if any):", result.rows[0]);
-
   return result.rows;
 };
 

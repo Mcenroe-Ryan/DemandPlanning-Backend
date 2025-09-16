@@ -174,88 +174,88 @@ router.put("/forecast/consensus", async (req, res) => {
 
 // Generate data for both countries
 // In routes, replace the generate/all route section:
-router.post("/generate/all", async (req, res) => {
-  try {
-    console.log("Starting data generation for both countries...");
+// router.post("/generate/all", async (req, res) => {
+//   try {
+//     console.log("Starting data generation for both countries...");
 
-    const DataGenerationService = require("../service/dataGenerationService");
-    const dataServiceInstance = new DataGenerationService();
+//     const DataGenerationService = require("../service/dataGenerationService");
+//     const dataServiceInstance = new DataGenerationService();
 
-    console.log("Clearing all existing data...");
-    const totalCleared = await dataServiceInstance.clearTableData();
-    console.log(`Cleared ${totalCleared} existing records`);
+//     console.log("Clearing all existing data...");
+//     const totalCleared = await dataServiceInstance.clearTableData();
+//     console.log(`Cleared ${totalCleared} existing records`);
 
-    const results = [];
+//     const results = [];
 
-    // Generate India data
-    try {
-      const indiaResult = await dataServiceInstance.generateData("India");
-      results.push({
-        country: "India",
-        success: true,
-        recordsGenerated: indiaResult.recordsCount,
-        productsProcessed: indiaResult.productsCount,
-        message: indiaResult.message,
-      });
-    } catch (error) {
-      results.push({
-        country: "India",
-        success: false,
-        error: error.message,
-      });
-    }
+//     // Generate India data
+//     try {
+//       const indiaResult = await dataServiceInstance.generateData("India");
+//       results.push({
+//         country: "India",
+//         success: true,
+//         recordsGenerated: indiaResult.recordsCount,
+//         productsProcessed: indiaResult.productsCount,
+//         message: indiaResult.message,
+//       });
+//     } catch (error) {
+//       results.push({
+//         country: "India",
+//         success: false,
+//         error: error.message,
+//       });
+//     }
 
-    // Generate USA data
-    try {
-      const usaResult = await dataServiceInstance.generateData("USA");
-      results.push({
-        country: "USA",
-        success: true,
-        recordsGenerated: usaResult.recordsCount,
-        productsProcessed: usaResult.productsCount,
-        message: usaResult.message,
-      });
-    } catch (error) {
-      results.push({
-        country: "USA",
-        success: false,
-        error: error.message,
-      });
-    }
+//     // Generate USA data
+//     try {
+//       const usaResult = await dataServiceInstance.generateData("USA");
+//       results.push({
+//         country: "USA",
+//         success: true,
+//         recordsGenerated: usaResult.recordsCount,
+//         productsProcessed: usaResult.productsCount,
+//         message: usaResult.message,
+//       });
+//     } catch (error) {
+//       results.push({
+//         country: "USA",
+//         success: false,
+//         error: error.message,
+//       });
+//     }
 
-    const allSuccessful = results.every((r) => r.success);
-    const totalRecords = results.reduce(
-      (sum, r) => sum + (r.recordsGenerated || 0),
-      0
-    );
+//     const allSuccessful = results.every((r) => r.success);
+//     const totalRecords = results.reduce(
+//       (sum, r) => sum + (r.recordsGenerated || 0),
+//       0
+//     );
 
-    res.status(allSuccessful ? 200 : 207).json({
-      success: allSuccessful,
-      message: allSuccessful
-        ? "Successfully cleared existing data and generated fresh data for both countries"
-        : "Data generation completed with some errors",
-      data: {
-        totalRecords,
-        clearedRecords: totalCleared,
-        results,
-        timestamp: new Date().toISOString(),
-      },
-    });
-  } catch (error) {
-    console.error("Error in bulk data generation:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to generate data",
-      error: error.message,
-    });
-  }
-});
+//     res.status(allSuccessful ? 200 : 207).json({
+//       success: allSuccessful,
+//       message: allSuccessful
+//         ? "Successfully cleared existing data and generated fresh data for both countries"
+//         : "Data generation completed with some errors",
+//       data: {
+//         totalRecords,
+//         clearedRecords: totalCleared,
+//         results,
+//         timestamp: new Date().toISOString(),
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error in bulk data generation:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to generate data",
+//       error: error.message,
+//     });
+//   }
+// });
 
 
 
 // Generate data for both countries
 // In routes, replace the generate/all route section:
-router.post("/generate/weekly_all", async (req, res) => {
+router.post("/generate/all", async (req, res) => {
   try {
     console.log("Starting data generation for both countries...");
 
