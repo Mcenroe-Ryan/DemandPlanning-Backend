@@ -170,7 +170,7 @@ const getForecastData = async (filters) => {
       sum(on_hand_units) as on_hand_units,
       AVG(mape) AS avg_mape,
       month_name
-    FROM public.weekly_demand_forecast
+    FROM public.demand_forecast
     WHERE ${whereClauses.join(" AND ")}
     GROUP BY month_name
     ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
@@ -383,127 +383,6 @@ const updateConsensusForecast = async (payload) => {
     throw new Error("Failed to update consensus_forecast");
   }
 };
-// const short = (v) => Array.isArray(v) ? (v.length > 6 ? [...v.slice(0,6), `+${v.length-6} more`] : v) : v;
-
-// const updateConsensusForecast = async (payload) => {
-//   const requiredParams = [
-//     "country_name","state_name","city_name","plant_name",
-//     "category_name","sku_code","channel_name",
-//     "consensus_forecast","target_month","model_name",
-//   ];
-//   for (const p of requiredParams) {
-//     if (!(p in payload)) throw new Error(`Missing required parameter: ${p}`);
-//   }
-
-//   let targetMonth;
-//   if (dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
-//     targetMonth = dayjs(payload.target_month, "YYYY-MM-DD").endOf("month").format("YYYY-MM-DD");
-//   } else {
-//     throw new Error("target_month must be in 'YYYY-MM-DD' format");
-//   }
-
-//   const consensusValue = Number(payload.consensus_forecast);
-//   if (Number.isNaN(consensusValue)) throw new Error("consensus_forecast must be a valid number");
-
-//   const model_name = payload.model_name || "XGBoost";
-//   const arr = (v) => (Array.isArray(v) ? v : [v]);
-
-//   const params = [
-//     consensusValue,
-//     arr(payload.country_name),
-//     arr(payload.state_name),
-//     arr(payload.city_name),
-//     arr(payload.plant_name),
-//     arr(payload.category_name),
-//     arr(payload.sku_code),
-//     arr(payload.channel_name),
-//     model_name,
-//     targetMonth,
-//   ];
-
-//   // Build a friendly filters summary for logging
-//   const filters = {
-//     consensus_set_to: params[0],
-//     countries: short(params[1]),
-//     states: short(params[2]),
-//     cities: short(params[3]),
-//     plants: short(params[4]),
-//     categories: short(params[5]),
-//     skus: short(params[6]),
-//     channels: short(params[7]),
-//     model_name: params[8],
-//     item_date: params[9], // month-end
-//   };
-
-//   const sql = `
-// WITH matched AS (
-//   SELECT country_name, state_name, city_name, plant_name,
-//          category_name, sku_code, channel_name, model_name,
-//          item_date::date AS item_date,
-//          consensus_forecast AS old_consensus
-//   FROM public.demand_forecast
-//   WHERE country_name = ANY($2)
-//     AND state_name   = ANY($3)
-//     AND city_name    = ANY($4)
-//     AND plant_name   = ANY($5)
-//     AND category_name= ANY($6)
-//     AND sku_code     = ANY($7)
-//     AND channel_name = ANY($8)
-//     AND model_name   = $9
-//     AND item_date::date = $10
-// )
-// UPDATE public.demand_forecast d
-// SET consensus_forecast = $1
-// FROM matched m
-// WHERE d.country_name = m.country_name
-//   AND d.state_name   = m.state_name
-//   AND d.city_name    = m.city_name
-//   AND d.plant_name   = m.plant_name
-//   AND d.category_name= m.category_name
-//   AND d.sku_code     = m.sku_code
-//   AND d.channel_name = m.channel_name
-//   AND d.model_name   = m.model_name
-//   AND d.item_date::date = m.item_date
-// RETURNING d.country_name, d.state_name, d.city_name, d.plant_name,
-//           d.category_name, d.sku_code, d.channel_name, d.model_name,
-//           d.item_date::date AS item_date,
-//           m.old_consensus, d.consensus_forecast AS new_consensus;
-// `;
-
-//   try {
-//     const result = await query(sql, params);
-
-//     // Always log filters + outcome
-//     console.groupCollapsed(`[Consensus UPDATE] ${result.rowCount} row(s)`);
-//     console.log("Filters:", filters);
-
-//     if (result.rowCount === 0) {
-//       console.warn("No rows matched these filters.");
-//     } else {
-//       console.table(
-//         result.rows.map(r => ({
-//           date: r.item_date,
-//           country: r.country_name, state: r.state_name, city: r.city_name, plant: r.plant_name,
-//           category: r.category_name, sku: r.sku_code, channel: r.channel_name, model: r.model_name,
-//           old: r.old_consensus, new: r.new_consensus
-//         }))
-//       );
-//     }
-//     console.groupEnd();
-
-//     return {
-//       success: true,
-//       message: `Updated ${result.rowCount} record(s) for consensus_forecast using model: ${model_name}.`,
-//       updatedCount: result.rowCount,
-//       filters,
-//       rows: result.rows,
-//       modelUsed: model_name,
-//     };
-//   } catch (error) {
-//     console.error("Error updating consensus_forecast:", error);
-//     throw new Error("Failed to update consensus_forecast");
-//   }
-// };
 
 const getForecastAlertData = async (filters) => {
   const model_name = filters.model_name;
