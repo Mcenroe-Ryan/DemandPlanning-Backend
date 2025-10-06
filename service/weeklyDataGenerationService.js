@@ -499,7 +499,15 @@ class WeeklyDataGenerationService {
       // Determine if this is past, current, or future
       const isCurrentWeek = weekStart.isSame(this.today.startOf("isoWeek"), "week");
       const isPastWeek = weekEnd.isBefore(this.today);
-      const isFutureWeek = weekStart.isAfter(this.today);
+      let isFutureWeek = weekStart.isAfter(this.today);
+
+
+      const currentIsoWeekNumber = this.today.isoWeek();
+      const currentIsoYear = this.today.isoWeekYear();
+
+      // Check if the current week matches
+      const isNextToCurrentWeek = isoWeekNumber === (currentIsoWeekNumber+1) && isoYear === currentIsoYear;
+
 
       // Generate weekly actual
       let actual = this.getSeasonalRange({
@@ -546,7 +554,11 @@ class WeeklyDataGenerationService {
 
       // Apply current week adjustment
       if (isCurrentWeek) {
+        console.log('isCurrentWeek',actual);
         actual = this.adjustActualForCurrentWeek(actual, weekStart, weekEnd);
+      }
+       if (isNextToCurrentWeek) {
+       isFutureWeek = false;
       }
 
       let revenue = (actual / 1000) * this.getRandomBetweenOneAndOnePointFive(1.1, 1.4);

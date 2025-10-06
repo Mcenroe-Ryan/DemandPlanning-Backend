@@ -170,7 +170,7 @@ const getForecastData = async (filters) => {
       sum(on_hand_units) as on_hand_units,
       AVG(mape) AS avg_mape,
       month_name
-    FROM public.demand_forecast
+    FROM public.weekly_demand_forecast
     WHERE ${whereClauses.join(" AND ")}
     GROUP BY month_name
     ORDER BY TO_DATE(month_name, 'FMMonth YYYY')
