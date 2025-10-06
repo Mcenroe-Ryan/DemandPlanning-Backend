@@ -356,7 +356,7 @@ const updateConsensusForecast = async (payload) => {
 
   // 5. SQL query (unchanged)
   const sql = `
-    UPDATE public.demand_forecast
+    UPDATE public.weekly_demand_forecast
     SET consensus_forecast = $1
     WHERE country_name = ANY($2)
       AND state_name = ANY($3)
