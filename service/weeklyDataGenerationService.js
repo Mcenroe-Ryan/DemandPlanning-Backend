@@ -25,7 +25,7 @@ class WeeklyDataGenerationService {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       port: process.env.DB_PORT,
-      ssl: { rejectUnauthorized: false } //for RDS
+      // ssl: { rejectUnauthorized: false } //for RDS
     });
   }
 
@@ -502,11 +502,17 @@ class WeeklyDataGenerationService {
       let isFutureWeek = weekStart.isAfter(this.today);
 
 
-      const currentIsoWeekNumber = this.today.isoWeek();
-      const currentIsoYear = this.today.isoWeekYear();
+      // const currentIsoWeekNumber = this.today.isoWeek();
+      // const currentIsoYear = this.today.isoWeekYear();
 
-      // Check if the current week matches
-      const isNextToCurrentWeek = isoWeekNumber === (currentIsoWeekNumber+1) && isoYear === currentIsoYear;
+      // // Check if the current week matches
+      // const isNextToCurrentWeek = isoWeekNumber === (currentIsoWeekNumber+1) && isoYear === currentIsoYear;
+
+       // Determine if the week falls in current month or next month (based on mid-week day)
+      const currentMonthDate = this.today;
+      const nextMonthDate = this.today.add(1, "month");
+      const isCurrentMonthWeek = midWeekDate.month() === currentMonthDate.month() && midWeekDate.year() === currentMonthDate.year();
+      const isNextMonthWeek = midWeekDate.month() === nextMonthDate.month() && midWeekDate.year() === nextMonthDate.year();
 
 
       // Generate weekly actual
@@ -554,14 +560,30 @@ class WeeklyDataGenerationService {
 
       // Apply current week adjustment
       if (isCurrentWeek) {
-        console.log('isCurrentWeek',actual);
+        // console.log('isCurrentWeek',actual);
         actual = this.adjustActualForCurrentWeek(actual, weekStart, weekEnd);
       }
-       if (isNextToCurrentWeek) {
-       isFutureWeek = false;
-      }
+      //  if (isNextToCurrentWeek) {
+      //  isFutureWeek = false;
+      // }
+
+            // === Add this block ===
+      // const nextMonthStart = this.today.add(1, "month").startOf("month");
+      // const nextMonthEnd = this.today.add(1, "month").endOf("month");
+
+      // Check if the week falls fully or partially inside next month
+      // const isNextMonthWeek = 
+      //   (weekStart.isSame(nextMonthStart, "month") || weekEnd.isSame(nextMonthStart, "month")) ||
+      //   (weekStart.isAfter(nextMonthStart) && weekStart.isBefore(nextMonthEnd)) ||
+      //   (weekEnd.isAfter(nextMonthStart) && weekEnd.isBefore(nextMonthEnd));
+
 
       let revenue = (actual / 1000) * this.getRandomBetweenOneAndOnePointFive(1.1, 1.4);
+
+
+      // Determine whether to include this week for consensus
+      // Include if it's not a future week, or it belongs to the current month, or the next month
+      const includeForConsensus = (!isFutureWeek) || isCurrentMonthWeek || isNextMonthWeek;
 
       for (const model of models) {
         let mape = this.getRandomIntInclusive(10, 100);
@@ -604,7 +626,9 @@ class WeeklyDataGenerationService {
           inventory_level_pct: isCurrentWeek ? levelPct : null,
           stock_out_days: isCurrentWeek ? stockOutDays : null,
           on_hand_units: isCurrentWeek ? onHandUnits : null,
-          consensus_forecast: !isFutureWeek ? consensus : null,
+          // consensus_forecast: !isFutureWeek ? consensus : null,
+          // consensus_forecast: (!isFutureWeek || isNextMonthWeek) ? consensus : null,
+          consensus_forecast: includeForConsensus ? consensus : null,
           mape: mape,
           marketing_percent: marketing_percent,
           ml_forecast_percent: ml_forecast_percent,
