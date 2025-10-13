@@ -299,12 +299,12 @@ const updateConsensusForecast = async (payload) => {
     "category_name",
     "sku_code",
     "channel_name",
-    "consensus_forecast",
-    "target_month",
+    "consensus_forecast",   
+    "target_month",        
     "model_name",
   ];
 
-  // 1. Validate required fields
+  // 1) Validate required fields
   for (const param of requiredParams) {
     if (!(param in payload)) {
       console.error(`Missing required parameter: ${param}`);
@@ -312,77 +312,119 @@ const updateConsensusForecast = async (payload) => {
     }
   }
 
-  // 2. Parse and validate target_month, then convert to month-end
-  let targetMonth;
-
-  if (dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
-    // Convert beginning of month to end of month since backend stores month-end dates
-    targetMonth = dayjs(payload.target_month, "YYYY-MM-DD")
-      .endOf("month")
-      .format("YYYY-MM-DD");
-  } else {
-    console.error(
-      "Invalid target_month format. Received:",
-      payload.target_month
-    );
+  // 2) Parse target month into [monthStart, monthEnd]
+  if (!dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
+    console.error("Invalid target_month format. Received:", payload.target_month);
     throw new Error("target_month must be in 'YYYY-MM-DD' format");
   }
+  const monthStart = dayjs(payload.target_month).startOf("month").format("YYYY-MM-DD");
+  const monthEnd   = dayjs(payload.target_month).endOf("month").format("YYYY-MM-DD");
 
-  // 3. Validate and parse consensus_forecast
-  const consensusValue = Number(payload.consensus_forecast);
-  if (isNaN(consensusValue)) {
-    console.error(
-      "Invalid consensus_forecast value. Received:",
-      payload.consensus_forecast
-    );
+  // 3) Parse consensus_forecast (monthly total)
+  const monthlyConsensus = Number(payload.consensus_forecast);
+  if (Number.isNaN(monthlyConsensus)) {
+    console.error("Invalid consensus_forecast value. Received:", payload.consensus_forecast);
     throw new Error("consensus_forecast must be a valid number");
   }
 
-  const model_name = payload.model_name || "XGBoost"; // Default fallback
+  const model_name = payload.model_name || "XGBoost";
   const arr = (v) => (Array.isArray(v) ? v : [v]);
 
   const params = [
-    consensusValue,
-    arr(payload.country_name),
-    arr(payload.state_name),
-    arr(payload.city_name),
-    arr(payload.plant_name),
-    arr(payload.category_name),
-    arr(payload.sku_code),
-    arr(payload.channel_name),
-    model_name, //
-    targetMonth,
+    arr(payload.country_name),   
+    arr(payload.state_name),     
+    arr(payload.city_name),      
+    arr(payload.plant_name),     
+    arr(payload.category_name),  
+    arr(payload.sku_code),       
+    arr(payload.channel_name),   
+    model_name,                  
+    monthStart,                  
+    monthEnd,                    
+    monthlyConsensus,             
   ];
 
-  // 5. SQL query (unchanged)
   const sql = `
-    UPDATE public.weekly_demand_forecast
-    SET consensus_forecast = $1
-    WHERE country_name = ANY($2)
-      AND state_name = ANY($3)
-      AND city_name = ANY($4)
-      AND plant_name = ANY($5)
-      AND category_name = ANY($6)
-      AND sku_code = ANY($7)
-      AND channel_name = ANY($8)
-      AND model_name = $9
-      AND DATE(item_date) = $10
-  `;
+  WITH full_weeks AS (
+    SELECT DISTINCT w.week_name
+    FROM public.weekly_demand_forecast w
+    WHERE w.country_name  = ANY($1)
+      AND w.state_name    = ANY($2)
+      AND w.city_name     = ANY($3)
+      AND w.plant_name    = ANY($4)
+      AND w.category_name = ANY($5)
+      AND w.sku_code      = ANY($6)
+      AND w.channel_name  = ANY($7)
+      AND w.model_name    = $8
+      -- only *full* weeks entirely within the month window
+      AND w.week_start_date >= $9::date
+      AND w.week_end_date   <= $10::date
+  ),
+  weeks_count AS (
+    SELECT COUNT(*)::int AS weeks_in_month
+    FROM full_weeks
+  ),
+  upd AS (
+    UPDATE public.weekly_demand_forecast w
+    SET consensus_forecast = CASE
+      WHEN wc.weeks_in_month IS NULL OR wc.weeks_in_month = 0 THEN w.consensus_forecast
+      ELSE ROUND($11::numeric / wc.weeks_in_month, 2)
+    END
+    FROM weeks_count wc
+    WHERE w.country_name  = ANY($1)
+      AND w.state_name    = ANY($2)
+      AND w.city_name     = ANY($3)
+      AND w.plant_name    = ANY($4)
+      AND w.category_name = ANY($5)
+      AND w.sku_code      = ANY($6)
+      AND w.channel_name  = ANY($7)
+      AND w.model_name    = $8
+      -- update rows whose week is in the set of full weeks
+      AND w.week_name IN (SELECT week_name FROM full_weeks)
+    RETURNING w.week_name
+  )
+  SELECT (SELECT weeks_in_month FROM weeks_count) AS weeks_in_month,
+         COUNT(*) AS rows_updated
+  FROM upd;
+`;
+
   try {
     const result = await query(sql, params);
-    console.table(result.rows); // see exactly which rows changed and how
+
+    const meta = result.rows?.[0] || { weeks_in_month: 0, rows_updated: 0 };
+    const weeksInMonth = Number(meta.weeks_in_month) || 0;
+    const rowsUpdated = Number(meta.rows_updated) || 0;
+
+    if (weeksInMonth === 0) {
+      return {
+        success: false,
+        message:
+          "No weekly rows found for the selected month with the given filters. Nothing updated.",
+        weeksInMonth,
+        rowsUpdated,
+      };
+    }
+
+    const perWeekValue = Number((monthlyConsensus / weeksInMonth).toFixed(2));
 
     return {
       success: true,
-      message: `Updated ${result.rowCount} record(s) for consensus_forecast using model: ${model_name}.`,
-      updatedCount: result.rowCount,
+      message: `Updated ${rowsUpdated} weekly row(s). Split ${monthlyConsensus} across ${weeksInMonth} week(s) => ${perWeekValue} per week.`,
       modelUsed: model_name,
+      month: {
+        start: monthStart,
+        end: monthEnd,
+      },
+      weeksInMonth,
+      perWeekValue,
+      rowsUpdated,
     };
   } catch (error) {
     console.error("Error updating consensus_forecast:", error);
     throw new Error("Failed to update consensus_forecast");
   }
 };
+
 
 const getForecastAlertData = async (filters) => {
   const model_name = filters.model_name;
