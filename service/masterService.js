@@ -290,6 +290,182 @@ const getSkusByCategories = async (categoryIds) => {
   return result.rows;
 };
 
+// const updateConsensusForecast = async (payload) => {
+//   const requiredParams = [
+//     "country_name",
+//     "state_name",
+//     "city_name",
+//     "plant_name",
+//     "category_name",
+//     "sku_code",
+//     "channel_name",
+//     "consensus_forecast",   
+//     "target_month",        
+//     "model_name",
+//   ];
+
+//   // 1) Validate required fields
+//   for (const param of requiredParams) {
+//     if (!(param in payload)) {
+//       console.error(`Missing required parameter: ${param}`);
+//       throw new Error(`Missing required parameter: ${param}`);
+//     }
+//   }
+
+//   // 2) Parse target month into [monthStart, monthEnd]
+//   if (!dayjs(payload.target_month, "YYYY-MM-DD", true).isValid()) {
+//     console.error("Invalid target_month format. Received:", payload.target_month);
+//     throw new Error("target_month must be in 'YYYY-MM-DD' format");
+//   }
+//   const monthStart = dayjs(payload.target_month).startOf("month").format("YYYY-MM-DD");
+//   const monthEnd   = dayjs(payload.target_month).endOf("month").format("YYYY-MM-DD");
+
+//   // 3) Parse consensus_forecast (monthly total)
+//   const monthlyConsensus = Number(payload.consensus_forecast);
+//   if (Number.isNaN(monthlyConsensus)) {
+//     console.error("Invalid consensus_forecast value. Received:", payload.consensus_forecast);
+//     throw new Error("consensus_forecast must be a valid number");
+//   }
+
+//   const model_name = payload.model_name || "XGBoost";
+//   const arr = (v) => (Array.isArray(v) ? v : [v]);
+
+//   const params = [
+//     arr(payload.country_name),   
+//     arr(payload.state_name),     
+//     arr(payload.city_name),      
+//     arr(payload.plant_name),     
+//     arr(payload.category_name),  
+//     arr(payload.sku_code),       
+//     arr(payload.channel_name),   
+//     model_name,                  
+//     monthStart,                  
+//     monthEnd,                    
+//     monthlyConsensus,             
+//   ];
+
+// //   const sql = `
+// //   WITH full_weeks AS (
+// //     SELECT DISTINCT w.week_name
+// //     FROM public.weekly_demand_forecast w
+// //     WHERE w.country_name  = ANY($1)
+// //       AND w.state_name    = ANY($2)
+// //       AND w.city_name     = ANY($3)
+// //       AND w.plant_name    = ANY($4)
+// //       AND w.category_name = ANY($5)
+// //       AND w.sku_code      = ANY($6)
+// //       AND w.channel_name  = ANY($7)
+// //       AND w.model_name    = $8
+// //       -- only *full* weeks entirely within the month window
+// //       AND w.week_start_date >= $9::date
+// //       AND w.week_end_date   <= $10::date
+// //   ),
+// //   weeks_count AS (
+// //     SELECT COUNT(*)::int AS weeks_in_month
+// //     FROM full_weeks
+// //   ),
+// //   upd AS (
+// //     UPDATE public.weekly_demand_forecast w
+// //     SET consensus_forecast = CASE
+// //       WHEN wc.weeks_in_month IS NULL OR wc.weeks_in_month = 0 THEN w.consensus_forecast
+// //       ELSE ROUND($11::numeric / wc.weeks_in_month, 2)
+// //     END
+// //     FROM weeks_count wc
+// //     WHERE w.country_name  = ANY($1)
+// //       AND w.state_name    = ANY($2)
+// //       AND w.city_name     = ANY($3)
+// //       AND w.plant_name    = ANY($4)
+// //       AND w.category_name = ANY($5)
+// //       AND w.sku_code      = ANY($6)
+// //       AND w.channel_name  = ANY($7)
+// //       AND w.model_name    = $8
+// //       -- update rows whose week is in the set of full weeks
+// //       AND w.week_name IN (SELECT week_name FROM full_weeks)
+// //     RETURNING w.week_name
+// //   )
+// //   SELECT (SELECT weeks_in_month FROM weeks_count) AS weeks_in_month,
+// //          COUNT(*) AS rows_updated
+// //   FROM upd;
+// // `;
+// const sql = `
+// WITH full_weeks AS (
+//   SELECT DISTINCT w.week_name
+//   FROM public.weekly_demand_forecast w
+//   WHERE w.country_name  = ANY($1)
+//     AND w.state_name    = ANY($2)
+//     AND w.city_name     = ANY($3)
+//     AND w.plant_name    = ANY($4)
+//     AND w.category_name = ANY($5)
+//     AND w.sku_code      = ANY($6)
+//     AND w.channel_name  = ANY($7)
+//     AND w.model_name    = $8
+//     AND w.week_start_date >= $9::date
+//     AND w.week_end_date   <= $10::date
+// ),
+// weeks_count AS (
+//   SELECT COUNT(*)::int AS weeks_in_month
+//   FROM full_weeks
+// ),
+// upd AS (
+//   UPDATE public.weekly_demand_forecast w
+//   SET consensus_forecast = CASE
+//     WHEN wc.weeks_in_month IS NULL OR wc.weeks_in_month = 0
+//       THEN w.consensus_forecast
+//     ELSE ($11::numeric / NULLIF(wc.weeks_in_month,0)::numeric)  -- no rounding
+//   END
+//   FROM weeks_count wc
+//   WHERE w.country_name  = ANY($1)
+//     AND w.state_name    = ANY($2)
+//     AND w.city_name     = ANY($3)
+//     AND w.plant_name    = ANY($4)
+//     AND w.category_name = ANY($5)
+//     AND w.sku_code      = ANY($6)
+//     AND w.channel_name  = ANY($7)
+//     AND w.model_name    = $8
+//     AND w.week_name IN (SELECT week_name FROM full_weeks)
+//   RETURNING w.week_name
+// )
+// SELECT (SELECT weeks_in_month FROM weeks_count) AS weeks_in_month,
+//        COUNT(*) AS rows_updated
+// FROM upd;
+// `;
+
+//   try {
+//     const result = await query(sql, params);
+
+//     const meta = result.rows?.[0] || { weeks_in_month: 0, rows_updated: 0 };
+//     const weeksInMonth = Number(meta.weeks_in_month) || 0;
+//     const rowsUpdated = Number(meta.rows_updated) || 0;
+
+//     if (weeksInMonth === 0) {
+//       return {
+//         success: false,
+//         message:
+//           "No weekly rows found for the selected month with the given filters. Nothing updated.",
+//         weeksInMonth,
+//         rowsUpdated,
+//       };
+//     }
+
+//     const perWeekValue = Number((monthlyConsensus / weeksInMonth).toFixed(2));
+
+//     return {
+//       success: true,
+//       message: `Updated ${rowsUpdated} weekly row(s). Split ${monthlyConsensus} across ${weeksInMonth} week(s) => ${perWeekValue} per week.`,
+//       modelUsed: model_name,
+//       month: {
+//         start: monthStart,
+//         end: monthEnd,
+//       },
+//       weeksInMonth,
+//       perWeekValue,
+//       rowsUpdated,
+//     };
+//   } catch (error) {
+//     console.error("Error updating consensus_forecast:", error);
+//     throw new Error("Failed to update consensus_forecast");
+//   }
+// };
 const updateConsensusForecast = async (payload) => {
   const requiredParams = [
     "country_name",
@@ -299,8 +475,8 @@ const updateConsensusForecast = async (payload) => {
     "category_name",
     "sku_code",
     "channel_name",
-    "consensus_forecast",   
-    "target_month",        
+    "consensus_forecast",
+    "target_month",
     "model_name",
   ];
 
@@ -317,13 +493,20 @@ const updateConsensusForecast = async (payload) => {
     console.error("Invalid target_month format. Received:", payload.target_month);
     throw new Error("target_month must be in 'YYYY-MM-DD' format");
   }
-  const monthStart = dayjs(payload.target_month).startOf("month").format("YYYY-MM-DD");
-  const monthEnd   = dayjs(payload.target_month).endOf("month").format("YYYY-MM-DD");
+  const monthStart = dayjs(payload.target_month)
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  const monthEnd = dayjs(payload.target_month)
+    .endOf("month")
+    .format("YYYY-MM-DD");
 
   // 3) Parse consensus_forecast (monthly total)
   const monthlyConsensus = Number(payload.consensus_forecast);
-  if (Number.isNaN(monthlyConsensus)) {
-    console.error("Invalid consensus_forecast value. Received:", payload.consensus_forecast);
+  if (!Number.isFinite(monthlyConsensus) || Number.isNaN(monthlyConsensus)) {
+    console.error(
+      "Invalid consensus_forecast value. Received:",
+      payload.consensus_forecast
+    );
     throw new Error("consensus_forecast must be a valid number");
   }
 
@@ -331,61 +514,77 @@ const updateConsensusForecast = async (payload) => {
   const arr = (v) => (Array.isArray(v) ? v : [v]);
 
   const params = [
-    arr(payload.country_name),   
-    arr(payload.state_name),     
-    arr(payload.city_name),      
-    arr(payload.plant_name),     
-    arr(payload.category_name),  
-    arr(payload.sku_code),       
-    arr(payload.channel_name),   
-    model_name,                  
-    monthStart,                  
-    monthEnd,                    
-    monthlyConsensus,             
+    arr(payload.country_name), // $1
+    arr(payload.state_name), // $2
+    arr(payload.city_name), // $3
+    arr(payload.plant_name), // $4
+    arr(payload.category_name), // $5
+    arr(payload.sku_code), // $6
+    arr(payload.channel_name), // $7
+    model_name, // $8
+    monthStart, // $9
+    monthEnd, // $10
+    monthlyConsensus, // $11
   ];
 
   const sql = `
-  WITH full_weeks AS (
-    SELECT DISTINCT w.week_name
-    FROM public.weekly_demand_forecast w
-    WHERE w.country_name  = ANY($1)
-      AND w.state_name    = ANY($2)
-      AND w.city_name     = ANY($3)
-      AND w.plant_name    = ANY($4)
-      AND w.category_name = ANY($5)
-      AND w.sku_code      = ANY($6)
-      AND w.channel_name  = ANY($7)
-      AND w.model_name    = $8
-      -- only *full* weeks entirely within the month window
-      AND w.week_start_date >= $9::date
-      AND w.week_end_date   <= $10::date
-  ),
-  weeks_count AS (
-    SELECT COUNT(*)::int AS weeks_in_month
-    FROM full_weeks
-  ),
-  upd AS (
-    UPDATE public.weekly_demand_forecast w
-    SET consensus_forecast = CASE
-      WHEN wc.weeks_in_month IS NULL OR wc.weeks_in_month = 0 THEN w.consensus_forecast
-      ELSE ROUND($11::numeric / wc.weeks_in_month, 2)
-    END
-    FROM weeks_count wc
-    WHERE w.country_name  = ANY($1)
-      AND w.state_name    = ANY($2)
-      AND w.city_name     = ANY($3)
-      AND w.plant_name    = ANY($4)
-      AND w.category_name = ANY($5)
-      AND w.sku_code      = ANY($6)
-      AND w.channel_name  = ANY($7)
-      AND w.model_name    = $8
-      -- update rows whose week is in the set of full weeks
-      AND w.week_name IN (SELECT week_name FROM full_weeks)
-    RETURNING w.week_name
-  )
-  SELECT (SELECT weeks_in_month FROM weeks_count) AS weeks_in_month,
-         COUNT(*) AS rows_updated
-  FROM upd;
+WITH full_weeks AS (
+  SELECT DISTINCT
+    w.week_name,
+    w.week_start_date
+  FROM public.weekly_demand_forecast w
+  WHERE w.country_name  = ANY($1)
+    AND w.state_name    = ANY($2)
+    AND w.city_name     = ANY($3)
+    AND w.plant_name    = ANY($4)
+    AND w.category_name = ANY($5)
+    AND w.sku_code      = ANY($6)
+    AND w.channel_name  = ANY($7)
+    AND w.model_name    = $8
+    AND w.week_start_date >= $9::date
+    AND w.week_end_date   <= $10::date
+),
+weeks_count AS (
+  SELECT COUNT(*)::int AS weeks_in_month
+  FROM full_weeks
+),
+first_week AS (
+  SELECT fw.week_name
+  FROM full_weeks fw
+  ORDER BY fw.week_start_date
+  LIMIT 1
+),
+upd AS (
+  UPDATE public.weekly_demand_forecast w
+  SET consensus_forecast = CASE
+    WHEN wc.weeks_in_month IS NULL OR wc.weeks_in_month = 0 THEN w.consensus_forecast
+    WHEN fw.week_name IS NOT NULL
+         AND w.week_name = fw.week_name
+      THEN
+        -- First week: base + remainder
+        ($11::bigint / wc.weeks_in_month)
+        + ($11::bigint % wc.weeks_in_month)
+    ELSE
+        -- Other weeks: base
+        ($11::bigint / wc.weeks_in_month)
+  END
+  FROM weeks_count wc,
+       first_week fw
+  WHERE w.country_name  = ANY($1)
+    AND w.state_name    = ANY($2)
+    AND w.city_name     = ANY($3)
+    AND w.plant_name    = ANY($4)
+    AND w.category_name = ANY($5)
+    AND w.sku_code      = ANY($6)
+    AND w.channel_name  = ANY($7)
+    AND w.model_name    = $8
+    AND w.week_name IN (SELECT week_name FROM full_weeks)
+  RETURNING w.week_name, w.consensus_forecast
+)
+SELECT
+  (SELECT weeks_in_month FROM weeks_count) AS weeks_in_month,
+  COUNT(*) AS rows_updated
+FROM upd;
 `;
 
   try {
@@ -405,18 +604,29 @@ const updateConsensusForecast = async (payload) => {
       };
     }
 
-    const perWeekValue = Number((monthlyConsensus / weeksInMonth).toFixed(2));
+    // Mirror the exact distribution logic used in SQL for transparency
+    const base = Math.floor(monthlyConsensus / weeksInMonth);
+    const remainder = monthlyConsensus % weeksInMonth;
+    const firstWeekValue = base + remainder;
+    const otherWeekValue = base;
 
     return {
       success: true,
-      message: `Updated ${rowsUpdated} weekly row(s). Split ${monthlyConsensus} across ${weeksInMonth} week(s) => ${perWeekValue} per week.`,
+      message:
+        `Updated ${rowsUpdated} weekly row(s). ` +
+        `Total ${monthlyConsensus} split over ${weeksInMonth} week(s): ` +
+        `Week 1 = ${firstWeekValue}, Weeks 2-${weeksInMonth} = ${otherWeekValue} each.`,
       modelUsed: model_name,
       month: {
         start: monthStart,
         end: monthEnd,
       },
       weeksInMonth,
-      perWeekValue,
+      distribution: {
+        firstWeek: firstWeekValue,
+        otherWeeks: otherWeekValue,
+        remainder,
+      },
       rowsUpdated,
     };
   } catch (error) {
