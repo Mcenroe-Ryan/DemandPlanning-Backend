@@ -597,7 +597,7 @@ class WeeklyDataGenerationService {
           promotion = Math.round((Math.random() * 100) + 50); // Weekly promotion
         }
 
-        let ml = Math.round(actual * this.getRandomBetweenOneAndOnePointFive(0.9, 1.1));
+        let ml = Math.round(actual * this.getRandomBetweenOneAndOnePointFive(0.7, 1.4));
 
         data.push({
           country_name: product.country_name,
@@ -614,8 +614,8 @@ class WeeklyDataGenerationService {
           week_end_date: weekEnd.format("YYYY-MM-DD"),
           baseline_forecast: Math.round(baseline),
           ml_forecast: Math.round(ml),
-          sales_units: isPastWeek || isCurrentWeek ? Math.round(ml * 0.8) : null,
-          promotion_marketing: isPastWeek || isCurrentWeek ? Math.round(ml * 0.2) : null,
+          sales_units: Math.round(ml * 0.8) ,
+          promotion_marketing: Math.round(ml * 0.2),
           revenue_forecast_lakhs: revenue.toFixed(2),
           model_name: model.name,
           month_name: monthName,
